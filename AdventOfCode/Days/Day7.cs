@@ -1,50 +1,57 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace AdventOfCode.Days
 {
     public class Day7
     {
-        public static long Part1()
+        public static async Task<long> Part1()
         {
             long result = 0;
             string[] inputs = File.ReadAllLines("C:\\Users\\UnluckyBird\\source\\repos\\AdventOfCode\\AdventOfCode2024\\AdventOfCode\\Data\\Day7.1.txt");
-
+            List<Task> tasks = [];
             for (int i = 0; i < inputs.Length; i++)
             {
                 var split1 = inputs[i].Split(':');
                 long target = long.Parse(split1[0]);
                 var numbers = split1[1].Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToArray();
 
-                if (IsValidEquation(target, 0, numbers, Operation.Add, false) || IsValidEquation(target, 1, numbers, Operation.Multiply, false))
+                tasks.Add(Task.Run(() =>
                 {
-                    result += target;
-                }
-
+                    if (IsValidEquation(target, 0, numbers, Operation.Add, false) || IsValidEquation(target, 1, numbers, Operation.Multiply, false))
+                    {
+                        Interlocked.Add(ref result, target);
+                    }
+                }));
             }
-            
+            await Task.WhenAll(tasks);
             return result;
         }
 
-        public static long Part2()
+        public static async Task<long> Part2()
         {
             long result = 0;
             string[] inputs = File.ReadAllLines("C:\\Users\\UnluckyBird\\source\\repos\\AdventOfCode\\AdventOfCode2024\\AdventOfCode\\Data\\Day7.1.txt");
+            List<Task> tasks = [];
 
             for (int i = 0; i < inputs.Length; i++)
             {
                 var split1 = inputs[i].Split(':');
                 long target = long.Parse(split1[0]);
                 var numbers = split1[1].Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToArray();
-
-                if (IsValidEquation(target, 0, numbers, Operation.Add, true) || IsValidEquation(target, 1, numbers, Operation.Multiply, true) || IsValidEquation(target, 1, numbers, Operation.Concat, true))
+                tasks.Add(Task.Run(() =>
                 {
-                    result += target;
-                }
-
+                    if (IsValidEquation(target, 0, numbers, Operation.Add, true) || IsValidEquation(target, 1, numbers, Operation.Multiply, true) || IsValidEquation(target, 1, numbers, Operation.Concat, true))
+                    {
+                        result += target;
+                    }
+                }));
             }
-
+            await Task.WhenAll(tasks);
             return result;
         }
         

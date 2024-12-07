@@ -1,12 +1,13 @@
 ﻿using AdventOfCode.Days;
 using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace AdventOfCode
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             var startTime = Stopwatch.GetTimestamp();
             Console.WriteLine("********************************************************");
@@ -48,8 +49,8 @@ namespace AdventOfCode
 
             //Day 7
             var startDay7Time = Stopwatch.GetTimestamp();
-            Console.WriteLine("Day 7.1: " + Day7.Part1());
-            Console.WriteLine("Day 7.2: " + Day7.Part2());
+            Console.WriteLine("Day 7.1: " + await Day7.Part1());
+            Console.WriteLine("Day 7.2: " + await Day7.Part2());
             Console.WriteLine($"Day 7 Execution Time: {Stopwatch.GetElapsedTime(startDay7Time).TotalMilliseconds} ms");
             Console.WriteLine($"Total Execution Time: {Stopwatch.GetElapsedTime(startTime).TotalMilliseconds} ms");
         }
