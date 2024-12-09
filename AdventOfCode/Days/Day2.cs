@@ -32,7 +32,6 @@ namespace AdventOfCode.Days
 
             string[] inputs = File.ReadAllLines("C:\\Users\\UnluckyBird\\source\\repos\\AdventOfCode\\AdventOfCode2024\\AdventOfCode\\Data\\Day2.1.txt");
 
-            List<(List<int>, List<int>)> retryLists = [];
             foreach (string input in inputs)
             {
                 List<int> levels = input.Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList();

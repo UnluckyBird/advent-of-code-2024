@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -9,49 +8,39 @@ namespace AdventOfCode.Days
 {
     public class Day7
     {
-        public static async Task<long> Part1()
+        public static long Part1()
         {
             long result = 0;
             string[] inputs = File.ReadAllLines("C:\\Users\\UnluckyBird\\source\\repos\\AdventOfCode\\AdventOfCode2024\\AdventOfCode\\Data\\Day7.1.txt");
-            List<Task> tasks = [];
-            for (int i = 0; i < inputs.Length; i++)
+            Parallel.ForEach(inputs, input =>
             {
-                var split1 = inputs[i].Split(':');
+                var split1 = input.Split(':');
                 long target = long.Parse(split1[0]);
                 var numbers = split1[1].Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToArray();
-
-                tasks.Add(Task.Run(() =>
+                if (IsValidEquation(target, 0, numbers, Operation.Add, false) || IsValidEquation(target, 1, numbers, Operation.Multiply, false))
                 {
-                    if (IsValidEquation(target, 0, numbers, Operation.Add, false) || IsValidEquation(target, 1, numbers, Operation.Multiply, false))
-                    {
-                        Interlocked.Add(ref result, target);
-                    }
-                }));
-            }
-            await Task.WhenAll(tasks);
+                    Interlocked.Add(ref result, target);
+                }
+            });
             return result;
         }
 
-        public static async Task<long> Part2()
+        public static long Part2()
         {
             long result = 0;
             string[] inputs = File.ReadAllLines("C:\\Users\\UnluckyBird\\source\\repos\\AdventOfCode\\AdventOfCode2024\\AdventOfCode\\Data\\Day7.1.txt");
-            List<Task> tasks = [];
 
-            for (int i = 0; i < inputs.Length; i++)
+            Parallel.ForEach(inputs, input =>
             {
-                var split1 = inputs[i].Split(':');
+                var split1 = input.Split(':');
                 long target = long.Parse(split1[0]);
                 var numbers = split1[1].Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToArray();
-                tasks.Add(Task.Run(() =>
+                if (IsValidEquation(target, 0, numbers, Operation.Add, true) || IsValidEquation(target, 1, numbers, Operation.Multiply, true) || IsValidEquation(target, 1, numbers, Operation.Concat, true))
                 {
-                    if (IsValidEquation(target, 0, numbers, Operation.Add, true) || IsValidEquation(target, 1, numbers, Operation.Multiply, true) || IsValidEquation(target, 1, numbers, Operation.Concat, true))
-                    {
-                        result += target;
-                    }
-                }));
-            }
-            await Task.WhenAll(tasks);
+                    Interlocked.Add(ref result, target);
+                }
+            });
+
             return result;
         }
         
