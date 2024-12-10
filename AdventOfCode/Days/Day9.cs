@@ -97,7 +97,14 @@ namespace AdventOfCode.Days
                             memory[freeMemoryPos[i].Item1 + j] = memid;
                             memory[usedMemoryPos + j] = -1;
                         }
-                        freeMemoryPos[i] = (freeMemoryPos[i].Item1 + usedAmount, freeMemoryPos[i].Item2 - usedAmount);
+                        if (freeMemoryPos[i].Item2 == usedAmount)
+                        {
+                            freeMemoryPos.RemoveAt(i);
+                        }
+                        else
+                        {
+                            freeMemoryPos[i] = (freeMemoryPos[i].Item1 + usedAmount, freeMemoryPos[i].Item2 - usedAmount);
+                        }
                         break;
                     }
                 }

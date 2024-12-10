@@ -17,7 +17,6 @@ namespace AdventOfCode.Days
                     if (inputs[i][j] == '0')
                     {
                         HashSet<(int, int)> set = IsPeak(inputs, (i, j), -1);
-                        set.Remove((-1, -1));
                         result += set.Count;
                     }
                 }
@@ -67,7 +66,7 @@ namespace AdventOfCode.Days
                     }
                 }
             }
-            return [(-1, -1)];
+            return [];
         }
 
         private static int IsPeakPart2(string[] inputs, (int, int) current, int lastValue)
