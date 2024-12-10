@@ -56,7 +56,7 @@ namespace AdventOfCode.Days
                     sum *= numbers[0];
                     break;
                 case Operation.Concat:
-                    sum = Convert.ToInt64(string.Format("{0}{1}", sum, numbers[0])); ;
+                    sum = Concat(sum, numbers[0]);
                     break;
             };
             if (sum > target)
@@ -82,6 +82,18 @@ namespace AdventOfCode.Days
             Add,
             Multiply,
             Concat
+        }
+
+        private static long Concat(long a, int b)
+        {
+            int pow = 1;
+
+            while (pow <= b)
+            {
+                pow = ((pow << 2) + pow) << 1;
+            }
+
+            return a * pow + b;
         }
     }
 }

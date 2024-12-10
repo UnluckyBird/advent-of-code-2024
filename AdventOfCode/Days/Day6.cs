@@ -176,7 +176,8 @@ namespace AdventOfCode.Days
 
             return result;
         }
-        private static bool IsLoop((int,int,Direction) player, HashSet<(int, int)> obstacles, int Size)
+
+        private static bool IsLoop((int, int, Direction) player, HashSet<(int, int)> obstacles, int Size)
         {
             HashSet<(int, int, Direction)> road = [player];
             while (player.Item1 > 0 && player.Item1 < Size && player.Item2 > 0 && player.Item2 < Size)
@@ -235,7 +236,7 @@ namespace AdventOfCode.Days
         }
 
         private enum Direction {
-            Up, Down, Left, Right
+            Up, Right, Down, Left
         }
     }
 }
