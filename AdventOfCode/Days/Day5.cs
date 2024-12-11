@@ -10,7 +10,7 @@ namespace AdventOfCode.Days
         public static int Part1()
         {
             int result = 0;
-            string[] inputs = File.ReadAllLines("C:\\Users\\UnluckyBird\\source\\repos\\AdventOfCode\\AdventOfCode2024\\AdventOfCode\\Data\\Day5.1.txt");
+            string[] inputs = File.ReadAllLines(AppContext.BaseDirectory + "\\Data\\Day5.1.txt");
             bool fillOrdering = false;
             Dictionary<int, List<int>> rules = [];
             foreach (string input in inputs)
@@ -68,7 +68,7 @@ namespace AdventOfCode.Days
         public static int Part2()
         {
             int result = 0;
-            string[] inputs = File.ReadAllLines("C:\\Users\\UnluckyBird\\source\\repos\\AdventOfCode\\AdventOfCode2024\\AdventOfCode\\Data\\Day5.1.txt");
+            string[] inputs = File.ReadAllLines(AppContext.BaseDirectory + "\\Data\\Day5.1.txt");
 
             bool fillOrdering = false;
             Dictionary<int, List<int>> rules = [];

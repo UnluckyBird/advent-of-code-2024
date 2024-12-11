@@ -5,4 +5,16 @@
     <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Content Include="Data\*.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Data\Day11.1.txt" />
+    <None Remove="Data\Day11.1test.txt" />
+    <None Remove="Data\Day4.1.txt" />
+  </ItemGroup>
+
 </Project>

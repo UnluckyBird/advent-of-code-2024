@@ -9,7 +9,7 @@ namespace AdventOfCode.Days
         public static int Part1()
         {
             int result = 0;
-            string[] inputs = File.ReadAllLines("C:\\Users\\UnluckyBird\\source\\repos\\AdventOfCode\\AdventOfCode2024\\AdventOfCode\\Data\\Day8.1.txt");
+            string[] inputs = File.ReadAllLines(AppContext.BaseDirectory + "\\Data\\Day8.1.txt");
             Dictionary<char, List<(int, int)>> antennas = [];
             HashSet<(int, int)> antinodes = [];
             for (int i = 0; i < inputs.Length; i++)
@@ -57,7 +57,7 @@ namespace AdventOfCode.Days
         public static int Part2()
         {
             int result = 0;
-            string[] inputs = File.ReadAllLines("C:\\Users\\UnluckyBird\\source\\repos\\AdventOfCode\\AdventOfCode2024\\AdventOfCode\\Data\\Day8.1.txt");
+            string[] inputs = File.ReadAllLines(AppContext.BaseDirectory + "\\Data\\Day8.1.txt");
             Dictionary<char, List<(int, int)>> antennas = [];
             HashSet<(int, int)> antinodes = [];
             for (int i = 0; i < inputs.Length; i++)

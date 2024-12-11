@@ -11,7 +11,8 @@ namespace AdventOfCode.Days
         public static long Part1()
         {
             long result = 0;
-            string[] inputs = File.ReadAllLines("C:\\Users\\UnluckyBird\\source\\repos\\AdventOfCode\\AdventOfCode2024\\AdventOfCode\\Data\\Day7.1.txt");
+            string[] inputs = File.ReadAllLines(AppContext.BaseDirectory + "\\Data\\Day7.1.txt");
+
             Parallel.ForEach(inputs, input =>
             {
                 var split1 = input.Split(':');
@@ -28,7 +29,7 @@ namespace AdventOfCode.Days
         public static long Part2()
         {
             long result = 0;
-            string[] inputs = File.ReadAllLines("C:\\Users\\UnluckyBird\\source\\repos\\AdventOfCode\\AdventOfCode2024\\AdventOfCode\\Data\\Day7.1.txt");
+            string[] inputs = File.ReadAllLines(AppContext.BaseDirectory + "\\Data\\Day7.1.txt");
 
             Parallel.ForEach(inputs, input =>
             {

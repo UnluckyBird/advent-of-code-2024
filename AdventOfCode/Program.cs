@@ -32,6 +32,13 @@ namespace AdventOfCode
             Console.WriteLine($"Day 3 Execution Time: {Stopwatch.GetElapsedTime(startDay3Time).TotalMilliseconds} ms");
             Console.WriteLine($"Total Execution Time: {Stopwatch.GetElapsedTime(startTime).TotalMilliseconds} ms");
 
+            //Day 4
+            var startDay4Time = Stopwatch.GetTimestamp();
+            Console.WriteLine("Day 4.1: " + Day4.Part1());
+            Console.WriteLine("Day 4.2: " + Day4.Part2());
+            Console.WriteLine($"Day 4 Execution Time: {Stopwatch.GetElapsedTime(startDay4Time).TotalMilliseconds} ms");
+            Console.WriteLine($"Total Execution Time: {Stopwatch.GetElapsedTime(startTime).TotalMilliseconds} ms");
+
             //Day 5
             var startDay5Time = Stopwatch.GetTimestamp();
             Console.WriteLine("Day 5.1: " + Day5.Part1());
@@ -72,6 +79,13 @@ namespace AdventOfCode
             Console.WriteLine("Day 10.1: " + Day10.Part1());
             Console.WriteLine("Day 10.2: " + Day10.Part2());
             Console.WriteLine($"Day 10 Execution Time: {Stopwatch.GetElapsedTime(startDay10Time).TotalMilliseconds} ms");
+            Console.WriteLine($"Total Execution Time: {Stopwatch.GetElapsedTime(startTime).TotalMilliseconds} ms");
+
+            //Day 10
+            var startDay11Time = Stopwatch.GetTimestamp();
+            Console.WriteLine("Day 11.1: " + Day11.Part1());
+            Console.WriteLine("Day 11.2: " + Day11.Part2());
+            Console.WriteLine($"Day 11 Execution Time: {Stopwatch.GetElapsedTime(startDay11Time).TotalMilliseconds} ms");
             Console.WriteLine($"Total Execution Time: {Stopwatch.GetElapsedTime(startTime).TotalMilliseconds} ms");
         }
     }

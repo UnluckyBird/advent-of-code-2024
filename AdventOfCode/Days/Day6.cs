@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -11,7 +12,7 @@ namespace AdventOfCode.Days
         public static int Part1()
         {
             int result = 0;
-            string[] inputs = File.ReadAllLines("C:\\Users\\UnluckyBird\\source\\repos\\AdventOfCode\\AdventOfCode2024\\AdventOfCode\\Data\\Day6.1.txt");
+            string[] inputs = File.ReadAllLines(AppContext.BaseDirectory + "\\Data\\Day6.1.txt");
 
             HashSet<(int, int)> road = [];
             HashSet<(int,int)> obstacles = [];
@@ -89,7 +90,7 @@ namespace AdventOfCode.Days
         public static int Part2()
         {
             int result = 0;
-            string[] inputs = File.ReadAllLines("C:\\Users\\UnluckyBird\\source\\repos\\AdventOfCode\\AdventOfCode2024\\AdventOfCode\\Data\\Day6.1.txt");
+            string[] inputs = File.ReadAllLines(AppContext.BaseDirectory + "\\Data\\Day6.1.txt");
 
             HashSet<(int, int)> road = [];
             HashSet<(int, int)> obstacles = [];

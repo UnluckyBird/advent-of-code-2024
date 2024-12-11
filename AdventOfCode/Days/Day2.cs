@@ -11,7 +11,7 @@ namespace AdventOfCode.Days
         {
             int result = 0;
 
-            string[] inputs = File.ReadAllLines("C:\\Users\\UnluckyBird\\source\\repos\\AdventOfCode\\AdventOfCode2024\\AdventOfCode\\Data\\Day2.1.txt");
+            string[] inputs = File.ReadAllLines(AppContext.BaseDirectory + "\\Data\\Day2.1.txt");
 
             foreach (string input in inputs)
             {
@@ -30,7 +30,7 @@ namespace AdventOfCode.Days
         {
             int result = 0;
 
-            string[] inputs = File.ReadAllLines("C:\\Users\\UnluckyBird\\source\\repos\\AdventOfCode\\AdventOfCode2024\\AdventOfCode\\Data\\Day2.1.txt");
+            string[] inputs = File.ReadAllLines(AppContext.BaseDirectory + "\\Data\\Day2.1.txt");
 
             foreach (string input in inputs)
             {

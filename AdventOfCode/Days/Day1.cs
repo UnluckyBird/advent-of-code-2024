@@ -11,7 +11,7 @@ namespace AdventOfCode.Days
         {
             int result = 0;
 
-            string[] inputs = File.ReadAllLines("C:\\Users\\UnluckyBird\\source\\repos\\AdventOfCode\\AdventOfCode2024\\AdventOfCode\\Data\\Day1.1.txt");
+            string[] inputs = File.ReadAllLines(AppContext.BaseDirectory + "\\Data\\Day1.1.txt");
 
             List<int> first = [];
             List<int> second = [];
@@ -32,7 +32,7 @@ namespace AdventOfCode.Days
         {
             int result = 0;
 
-            string[] inputs = File.ReadAllLines("C:\\Users\\UnluckyBird\\source\\repos\\AdventOfCode\\AdventOfCode2024\\AdventOfCode\\Data\\Day1.1.txt");
+            string[] inputs = File.ReadAllLines(AppContext.BaseDirectory + "\\Data\\Day1.1.txt");
 
             List<int> first = [];
             List<int> second = [];

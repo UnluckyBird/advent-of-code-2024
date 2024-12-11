@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace AdventOfCode.Days
@@ -8,7 +9,7 @@ namespace AdventOfCode.Days
         public static int Part1()
         {
             int result = 0;
-            string[] inputs = File.ReadAllLines("C:\\Users\\UnluckyBird\\source\\repos\\AdventOfCode\\AdventOfCode2024\\AdventOfCode\\Data\\Day10.1.txt");
+            string[] inputs = File.ReadAllLines(AppContext.BaseDirectory + "\\Data\\Day10.1.txt");
 
             for (int i = 0; i < inputs.Length; i++)
             {
@@ -28,7 +29,7 @@ namespace AdventOfCode.Days
         public static int Part2()
         {
             int result = 0;
-            string[] inputs = File.ReadAllLines("C:\\Users\\UnluckyBird\\source\\repos\\AdventOfCode\\AdventOfCode2024\\AdventOfCode\\Data\\Day10.1.txt");
+            string[] inputs = File.ReadAllLines(AppContext.BaseDirectory + "\\Data\\Day10.1.txt");
 
             for (int i = 0; i < inputs.Length; i++)
             {
