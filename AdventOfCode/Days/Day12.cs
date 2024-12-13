@@ -11,17 +11,69 @@ namespace AdventOfCode.Days
         {
             int result = 0;
             string[] inputs = File.ReadAllLines(AppContext.BaseDirectory + "\\Data\\Day12.1.txt");
-            HashSet<(int, int)> allUsed = [];
+            HashSet<(int, int)> visited = [];
 
             for (int i = 0; i < inputs.Length; i++)
             {
                 for (int j = 0; j < inputs[i].Length; j++)
                 {
-                    if (allUsed.Contains((i, j)) == false)
+                    if (visited.Contains((i, j)) == false)
                     {
-                        HashSet<(int, int)> region = IsRegion(inputs, [], (i, j), inputs[i][j], out int sum);
-                        allUsed.UnionWith(region);
-                        result += sum * region.Count;
+                        int edges = 0;
+                        char plant = inputs[i][j];
+                        HashSet<(int, int)> region = [(i, j)];
+                        Queue<(int, int)> queue = new();
+                        queue.Enqueue((i, j));
+                        while (queue.Count > 0)
+                        {
+                            (int y, int x) = queue.Dequeue();
+                            if (y-1 < 0 || x < 0 || y-1 >= inputs.Length || x >= inputs[0].Length || inputs[y-1][x] != plant)
+                            {
+                                edges++;
+                            }
+                            else
+                            {
+                                if (region.Add((y - 1, x)))
+                                {
+                                    queue.Enqueue((y - 1, x));
+                                }
+                            }
+                            if (y + 1 < 0 || x < 0 || y + 1 >= inputs.Length || x >= inputs[0].Length || inputs[y + 1][x] != plant)
+                            {
+                                edges++;
+                            }
+                            else
+                            {
+                                if (region.Add((y + 1, x)))
+                                {
+                                    queue.Enqueue((y + 1, x));
+                                }
+                            }
+                            if (y < 0 || x-1 < 0 || y >= inputs.Length || x-1 >= inputs[0].Length || inputs[y][x-1] != plant)
+                            {
+                                edges++;
+                            }
+                            else
+                            {
+                                if (region.Add((y, x-1)))
+                                {
+                                    queue.Enqueue((y, x-1));
+                                }
+                            }
+                            if (y < 0 || x+1 < 0 || y >= inputs.Length || x+1 >= inputs[0].Length || inputs[y][x+1] != plant)
+                            {
+                                edges++;
+                            }
+                            else
+                            {
+                                if (region.Add((y, x+1)))
+                                {
+                                    queue.Enqueue((y, x+1));
+                                }
+                            }
+                        }
+                        visited.UnionWith(region);
+                        result += edges * region.Count;
                     }
                 }
             }
@@ -29,24 +81,76 @@ namespace AdventOfCode.Days
             return result;
         }
 
-        public static long Part2()
+        public static int Part2()
         {
             int result = 0;
             string[] inputs = File.ReadAllLines(AppContext.BaseDirectory + "\\Data\\Day12.1.txt");
-            HashSet<(int, int)> allUsed = [];
+            HashSet<(int, int)> visited = [];
 
             for (int i = 0; i < inputs.Length; i++)
             {
                 for (int j = 0; j < inputs[i].Length; j++)
                 {
-                    if (allUsed.Contains((i, j)) == false)
+                    if (visited.Contains((i, j)) == false)
                     {
-                        HashSet<(int, int)> region = IsRegionPart2(inputs, [], (i, j), inputs[i][j], Direction.Down, out var edges);
-                        allUsed.UnionWith(region);
-                        int sum = 0;
+                        HashSet<(int, int, Direction)> edges = [];
+                        char plant = inputs[i][j];
+                        HashSet<(int, int)> region = [(i, j)];
+                        Queue<(int, int)> queue = new();
+                        queue.Enqueue((i, j));
+                        while (queue.Count > 0)
+                        {
+                            (int y, int x) = queue.Dequeue();
+                            if (y - 1 < 0 || x < 0 || y - 1 >= inputs.Length || x >= inputs[0].Length || inputs[y - 1][x] != plant)
+                            {
+                                edges.Add((y - 1, x, Direction.Up));
+                            }
+                            else
+                            {
+                                if (region.Add((y - 1, x)))
+                                {
+                                    queue.Enqueue((y - 1, x));
+                                }
+                            }
+                            if (y + 1 < 0 || x < 0 || y + 1 >= inputs.Length || x >= inputs[0].Length || inputs[y + 1][x] != plant)
+                            {
+                                edges.Add((y + 1, x, Direction.Down));
+                            }
+                            else
+                            {
+                                if (region.Add((y + 1, x)))
+                                {
+                                    queue.Enqueue((y + 1, x));
+                                }
+                            }
+                            if (y < 0 || x - 1 < 0 || y >= inputs.Length || x - 1 >= inputs[0].Length || inputs[y][x - 1] != plant)
+                            {
+                                edges.Add((y, x - 1, Direction.Left));
+                            }
+                            else
+                            {
+                                if (region.Add((y, x - 1)))
+                                {
+                                    queue.Enqueue((y, x - 1));
+                                }
+                            }
+                            if (y < 0 || x + 1 < 0 || y >= inputs.Length || x + 1 >= inputs[0].Length || inputs[y][x + 1] != plant)
+                            {
+                                edges.Add((y, x + 1, Direction.Right));
+                            }
+                            else
+                            {
+                                if (region.Add((y, x + 1)))
+                                {
+                                    queue.Enqueue((y, x + 1));
+                                }
+                            }
+                        }
+                        visited.UnionWith(region);
+                        int edgesSum = 0;
                         while (edges.Count > 0)
                         {
-                            sum++;
+                            edgesSum++;
                             (int y, int x, Direction dir) = edges.First();
                             edges.Remove((y, x, dir));
                             if (dir == Direction.Up || dir == Direction.Down)
@@ -84,66 +188,12 @@ namespace AdventOfCode.Days
                                 }
                             }
                         }
-                        result += sum * region.Count;
+                        result += edgesSum * region.Count;
                     }
                 }
             }
 
             return result;
-        }
-
-        private static HashSet<(int, int)> IsRegion(string[] inputs,  HashSet<(int, int)> thisUsed, (int, int) current, char plant, out int sum)
-        {
-            sum = 1;
-            if (current.Item1 >= 0 && current.Item2 >= 0 && current.Item1 < inputs.Length && current.Item2 < inputs[0].Length && inputs[current.Item1][current.Item2] == plant)
-            {
-                sum = 0;
-                if (thisUsed.Add(current))
-                {
-                    HashSet<(int, int)> set = [current];
-                    HashSet<(int, int)> set1 = IsRegion(inputs, thisUsed, (current.Item1 - 1, current.Item2), plant, out int sum1);
-                    HashSet<(int, int)> set2 = IsRegion(inputs, thisUsed, (current.Item1 + 1, current.Item2), plant, out int sum2);
-                    HashSet<(int, int)> set3 = IsRegion(inputs, thisUsed, (current.Item1, current.Item2 - 1), plant, out int sum3);
-                    HashSet<(int, int)> set4 = IsRegion(inputs, thisUsed, (current.Item1, current.Item2 + 1), plant, out int sum4);
-                    set.UnionWith(set1);
-                    set.UnionWith(set2);
-                    set.UnionWith(set3);
-                    set.UnionWith(set4);
-                    sum = sum1 + sum2 + sum3 + sum4;
-                    return set;
-                }
-            }
-            return [];
-        }
-
-        private static HashSet<(int, int)> IsRegionPart2(string[] inputs, HashSet<(int, int)> thisUsed, (int, int) current, char plant, Direction dir, out HashSet<(int ,int , Direction)> edges)
-        {
-            if (current.Item1 >= 0 && current.Item2 >= 0 && current.Item1 < inputs.Length && current.Item2 < inputs[0].Length && inputs[current.Item1][current.Item2] == plant)
-            {
-                if (thisUsed.Add(current))
-                {
-                    HashSet<(int, int)> set = [current];
-                    HashSet<(int, int)> set1 = IsRegionPart2(inputs, thisUsed, (current.Item1 - 1, current.Item2), plant, Direction.Up, out var edges1);
-                    HashSet<(int, int)> set2 = IsRegionPart2(inputs, thisUsed, (current.Item1 + 1, current.Item2), plant, Direction.Down, out var edges2);
-                    HashSet<(int, int)> set3 = IsRegionPart2(inputs, thisUsed, (current.Item1, current.Item2 - 1), plant, Direction.Left, out var edges3);
-                    HashSet<(int, int)> set4 = IsRegionPart2(inputs, thisUsed, (current.Item1, current.Item2 + 1), plant, Direction.Right, out var edges4);
-                    set.UnionWith(set1);
-                    set.UnionWith(set2);
-                    set.UnionWith(set3);
-                    set.UnionWith(set4);
-                    edges = edges1;
-                    edges.UnionWith(edges2);
-                    edges.UnionWith(edges3);
-                    edges.UnionWith(edges4);
-                    return set;
-                }
-                edges = [];
-            }
-            else
-            {
-                edges = [(current.Item1, current.Item2, dir)];
-            }
-            return [];
         }
 
         private enum Direction
