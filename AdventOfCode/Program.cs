@@ -81,11 +81,18 @@ namespace AdventOfCode
             Console.WriteLine($"Day 10 Execution Time: {Stopwatch.GetElapsedTime(startDay10Time).TotalMilliseconds} ms");
             Console.WriteLine($"Total Execution Time: {Stopwatch.GetElapsedTime(startTime).TotalMilliseconds} ms");
 
-            //Day 10
+            //Day 11
             var startDay11Time = Stopwatch.GetTimestamp();
             Console.WriteLine("Day 11.1: " + Day11.Part1());
             Console.WriteLine("Day 11.2: " + Day11.Part2());
             Console.WriteLine($"Day 11 Execution Time: {Stopwatch.GetElapsedTime(startDay11Time).TotalMilliseconds} ms");
+            Console.WriteLine($"Total Execution Time: {Stopwatch.GetElapsedTime(startTime).TotalMilliseconds} ms");
+
+            //Day 12
+            var startDay12Time = Stopwatch.GetTimestamp();
+            Console.WriteLine("Day 12.1: " + Day12.Part1());
+            Console.WriteLine("Day 12.2: " + Day12.Part2());
+            Console.WriteLine($"Day 12 Execution Time: {Stopwatch.GetElapsedTime(startDay12Time).TotalMilliseconds} ms");
             Console.WriteLine($"Total Execution Time: {Stopwatch.GetElapsedTime(startTime).TotalMilliseconds} ms");
         }
     }

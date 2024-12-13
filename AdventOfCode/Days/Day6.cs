@@ -191,6 +191,7 @@ namespace AdventOfCode.Days
                     }
                     else
                     {
+                        road.Add((player.Item1, player.Item2, player.Item3));
                         player.Item3 = Direction.Right;
                     }
                 }
@@ -202,6 +203,7 @@ namespace AdventOfCode.Days
                     }
                     else
                     {
+                        road.Add((player.Item1, player.Item2, player.Item3));
                         player.Item3 = Direction.Down;
                     }
                 }
@@ -213,6 +215,7 @@ namespace AdventOfCode.Days
                     }
                     else
                     {
+                        road.Add((player.Item1, player.Item2, player.Item3));
                         player.Item3 = Direction.Left;
                     }
                 }
@@ -224,6 +227,7 @@ namespace AdventOfCode.Days
                     }
                     else
                     {
+                        road.Add((player.Item1, player.Item2, player.Item3));
                         player.Item3 = Direction.Up;
                     }
                 }
@@ -231,7 +235,6 @@ namespace AdventOfCode.Days
                 {
                     return true;
                 }
-                road.Add((player.Item1, player.Item2, player.Item3));
             }
             return false;
         }
