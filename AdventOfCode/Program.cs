@@ -94,6 +94,34 @@ namespace AdventOfCode
             Console.WriteLine("Day 12.2: " + Day12.Part2());
             Console.WriteLine($"Day 12 Execution Time: {Stopwatch.GetElapsedTime(startDay12Time).TotalMilliseconds} ms");
             Console.WriteLine($"Total Execution Time: {Stopwatch.GetElapsedTime(startTime).TotalMilliseconds} ms");
+
+            //Day 13
+            var startDay13Time = Stopwatch.GetTimestamp();
+            Console.WriteLine("Day 13.1: " + Day13.Part1());
+            Console.WriteLine("Day 13.2: " + Day13.Part2());
+            Console.WriteLine($"Day 13 Execution Time: {Stopwatch.GetElapsedTime(startDay13Time).TotalMilliseconds} ms");
+            Console.WriteLine($"Total Execution Time: {Stopwatch.GetElapsedTime(startTime).TotalMilliseconds} ms");
+
+            //Day 14
+            var startDay14Time = Stopwatch.GetTimestamp();
+            Console.WriteLine("Day 14.1: " + Day14.Part1());
+            Console.WriteLine("Day 14.2: " + Day14.Part2());
+            Console.WriteLine($"Day 14 Execution Time: {Stopwatch.GetElapsedTime(startDay14Time).TotalMilliseconds} ms");
+            Console.WriteLine($"Total Execution Time: {Stopwatch.GetElapsedTime(startTime).TotalMilliseconds} ms");
+
+            //Day 15
+            var startDay15Time = Stopwatch.GetTimestamp();
+            Console.WriteLine("Day 15.1: " + Day15.Part1());
+            Console.WriteLine("Day 15.2: " + Day15.Part2());
+            Console.WriteLine($"Day 15 Execution Time: {Stopwatch.GetElapsedTime(startDay15Time).TotalMilliseconds} ms");
+            Console.WriteLine($"Total Execution Time: {Stopwatch.GetElapsedTime(startTime).TotalMilliseconds} ms");
+
+            //Day 16
+            var startDay16Time = Stopwatch.GetTimestamp();
+            Console.WriteLine("Day 16.1: " + Day16.Part1());
+            Console.WriteLine("Day 16.2: " + Day16.Part2());
+            Console.WriteLine($"Day 16 Execution Time: {Stopwatch.GetElapsedTime(startDay16Time).TotalMilliseconds} ms");
+            Console.WriteLine($"Total Execution Time: {Stopwatch.GetElapsedTime(startTime).TotalMilliseconds} ms");
         }
     }
 }
