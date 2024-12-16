@@ -128,30 +128,65 @@ namespace AdventOfCode.Days
                 {
                     if (inputs[i][j] == '.')
                     {
-                        roads.Add((i, j, Direction.Up));
-                        roads.Add((i, j, Direction.Down));
-                        roads.Add((i, j, Direction.Right));
-                        roads.Add((i, j, Direction.Left));
+                        if (inputs[i - 1][j] == '.')
+                        {
+                            roads.Add((i, j, Direction.Up));
+                        }
+                        if (inputs[i + 1][j] == '.')
+                        {
+                            roads.Add((i, j, Direction.Down));
+                        }
+                        if (inputs[i][j - 1] == '.')
+                        {
+                            roads.Add((i, j, Direction.Left));
+                        }
+                        if (inputs[i][j + 1] == '.')
+                        {
+                            roads.Add((i, j, Direction.Right));
+                        }
                     }
                     else if (inputs[i][j] == 'S')
                     {
                         start = (i, j);
-                        roads.Add((start.Item1, start.Item2, Direction.Up));
-                        roads.Add((start.Item1, start.Item2, Direction.Down));
-                        roads.Add((start.Item1, start.Item2, Direction.Right));
-                        roads.Add((start.Item1, start.Item2, Direction.Left));
-                        visited.Add((i, j, Direction.Right), (0, []));
-                        visited.Add((i, j, Direction.Up), (1000, []));
-                        visited.Add((i, j, Direction.Left), (2000, []));
-                        visited.Add((i, j, Direction.Down), (1000, []));
+                        if (inputs[i - 1][j] == '.')
+                        {
+                            roads.Add((i, j, Direction.Up));
+                            roads.Add((i - 1, j, Direction.Down));
+                            visited.Add((i, j, Direction.Up), (1000, []));
+                        }
+                        if (inputs[i + 1][j] == '.')
+                        {
+                            roads.Add((i, j, Direction.Down));
+                            roads.Add((i + 1, j, Direction.Up));
+                            visited.Add((i, j, Direction.Down), (1000, []));
+                        }
+                        if (inputs[i][j - 1] == '.')
+                        {
+                            roads.Add((i, j, Direction.Left));
+                            roads.Add((i, j - 1, Direction.Right));
+                            visited.Add((i, j, Direction.Left), (2000, []));
+                        }
+                        if (inputs[i][j + 1] == '.')
+                        {
+                            roads.Add((i, j, Direction.Right));
+                            roads.Add((i, j + 1, Direction.Left));
+                            visited.Add((i, j, Direction.Right), (0, []));
+                        }                        
                     }
                     else if (inputs[i][j] == 'E')
                     {
                         finish = (i, j);
                         roads.Add((i, j, Direction.Up));
+                        roads.Add((i - 1, j, Direction.Down));
+
                         roads.Add((i, j, Direction.Down));
-                        roads.Add((i, j, Direction.Right));
+                        roads.Add((i + 1, j, Direction.Up));
+
                         roads.Add((i, j, Direction.Left));
+                        roads.Add((i, j - 1, Direction.Right));
+
+                        roads.Add((i, j, Direction.Right));
+                        roads.Add((i, j + 1, Direction.Left));
                     }
                 }
             }
@@ -166,211 +201,251 @@ namespace AdventOfCode.Days
                     break;
                 }
 
-                if (reindeer.Key.Item3 == Direction.Up && roads.Contains((reindeer.Key.Item1 - 1, reindeer.Key.Item2, reindeer.Key.Item3)))
+                if (reindeer.Key.Item3 == Direction.Up)
                 {
-                    if (visited.TryGetValue((reindeer.Key.Item1 - 1, reindeer.Key.Item2, Direction.Up), out var upValue))
+                    if (roads.Contains((reindeer.Key.Item1 - 1, reindeer.Key.Item2, Direction.Up))) 
                     {
-                        if (upValue.Item1 > reindeer.Value.Item1 + 1)
+                        if (visited.TryGetValue((reindeer.Key.Item1 - 1, reindeer.Key.Item2, Direction.Up), out var upValue))
                         {
-                            visited[(reindeer.Key.Item1 - 1, reindeer.Key.Item2, Direction.Up)] = (reindeer.Value.Item1 + 1, [..reindeer.Value.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]);
+                            if (upValue.Item1 > reindeer.Value.Item1 + 1)
+                            {
+                                visited[(reindeer.Key.Item1 - 1, reindeer.Key.Item2, Direction.Up)] = (reindeer.Value.Item1 + 1, [.. reindeer.Value.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]);
+                            }
+                            else if (upValue.Item1 == reindeer.Value.Item1 + 1)
+                            {
+                                visited[(reindeer.Key.Item1 - 1, reindeer.Key.Item2, Direction.Up)] = (reindeer.Value.Item1 + 1, [.. reindeer.Value.Item2, .. upValue.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]);
+                            }
                         }
-                        else if (upValue.Item1 == reindeer.Value.Item1 + 1)
+                        else
                         {
-                            visited[(reindeer.Key.Item1 - 1, reindeer.Key.Item2, Direction.Up)] = (reindeer.Value.Item1 + 1, [..reindeer.Value.Item2, .. upValue.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]);
+                            visited.Add((reindeer.Key.Item1 - 1, reindeer.Key.Item2, Direction.Up), (reindeer.Value.Item1 + 1, [.. reindeer.Value.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]));
                         }
-                    }
-                    else
-                    {
-                        visited.Add((reindeer.Key.Item1 - 1, reindeer.Key.Item2, Direction.Up), (reindeer.Value.Item1 + 1, [..reindeer.Value.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]));
                     }
 
-                    if (visited.TryGetValue((reindeer.Key.Item1 - 1, reindeer.Key.Item2, Direction.Left), out var leftValue))
+                    if (roads.Contains((reindeer.Key.Item1 - 1, reindeer.Key.Item2, Direction.Left)))
                     {
-                        if (leftValue.Item1 > reindeer.Value.Item1 + 1001)
+                        if (visited.TryGetValue((reindeer.Key.Item1 - 1, reindeer.Key.Item2, Direction.Left), out var leftValue))
                         {
-                            visited[(reindeer.Key.Item1 - 1, reindeer.Key.Item2, Direction.Left)] = (reindeer.Value.Item1 + 1001, [.. reindeer.Value.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]);
+                            if (leftValue.Item1 > reindeer.Value.Item1 + 1001)
+                            {
+                                visited[(reindeer.Key.Item1 - 1, reindeer.Key.Item2, Direction.Left)] = (reindeer.Value.Item1 + 1001, [.. reindeer.Value.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]);
+                            }
+                            else if (leftValue.Item1 == reindeer.Value.Item1 + 1001)
+                            {
+                                visited[(reindeer.Key.Item1 - 1, reindeer.Key.Item2, Direction.Left)] = (reindeer.Value.Item1 + 1001, [.. reindeer.Value.Item2, .. leftValue.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]);
+                            }
                         }
-                        else if (leftValue.Item1 == reindeer.Value.Item1 + 1001)
+                        else
                         {
-                            visited[(reindeer.Key.Item1 - 1, reindeer.Key.Item2, Direction.Left)] = (reindeer.Value.Item1 + 1001, [.. reindeer.Value.Item2, .. leftValue.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]);
+                            visited.Add((reindeer.Key.Item1 - 1, reindeer.Key.Item2, Direction.Left), (reindeer.Value.Item1 + 1001, [.. reindeer.Value.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]));
                         }
-                    }
-                    else
-                    {
-                        visited.Add((reindeer.Key.Item1 - 1, reindeer.Key.Item2, Direction.Left), (reindeer.Value.Item1 + 1001, [.. reindeer.Value.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]));
                     }
 
-                    if (visited.TryGetValue((reindeer.Key.Item1 - 1, reindeer.Key.Item2, Direction.Right), out var rightValue))
+                    if (roads.Contains((reindeer.Key.Item1 - 1, reindeer.Key.Item2, Direction.Right)))
                     {
-                        if (rightValue.Item1 > reindeer.Value.Item1 + 1001)
+                        if (visited.TryGetValue((reindeer.Key.Item1 - 1, reindeer.Key.Item2, Direction.Right), out var rightValue))
                         {
-                            visited[(reindeer.Key.Item1 - 1, reindeer.Key.Item2, Direction.Right)] = (reindeer.Value.Item1 + 1001, [.. reindeer.Value.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]);
+                            if (rightValue.Item1 > reindeer.Value.Item1 + 1001)
+                            {
+                                visited[(reindeer.Key.Item1 - 1, reindeer.Key.Item2, Direction.Right)] = (reindeer.Value.Item1 + 1001, [.. reindeer.Value.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]);
+                            }
+                            else if (rightValue.Item1 == reindeer.Value.Item1 + 1001)
+                            {
+                                visited[(reindeer.Key.Item1 - 1, reindeer.Key.Item2, Direction.Right)] = (reindeer.Value.Item1 + 1001, [.. reindeer.Value.Item2, .. rightValue.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]);
+                            }
                         }
-                        else if (rightValue.Item1 == reindeer.Value.Item1 + 1001)
+                        else
                         {
-                            visited[(reindeer.Key.Item1 - 1, reindeer.Key.Item2, Direction.Right)] = (reindeer.Value.Item1 + 1001, [.. reindeer.Value.Item2, .. rightValue.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]);
+                            visited.Add((reindeer.Key.Item1 - 1, reindeer.Key.Item2, Direction.Right), (reindeer.Value.Item1 + 1001, [.. reindeer.Value.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]));
                         }
                     }
-                    else
-                    {
-                        visited.Add((reindeer.Key.Item1 - 1, reindeer.Key.Item2, Direction.Right), (reindeer.Value.Item1 + 1001, [.. reindeer.Value.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]));
-                    }
+
                     roads.Remove((reindeer.Key.Item1 - 1, reindeer.Key.Item2, Direction.Down));
                     visited.Remove((reindeer.Key.Item1 - 1, reindeer.Key.Item2, Direction.Down));
                 }
-                else if (reindeer.Key.Item3 == Direction.Down && roads.Contains((reindeer.Key.Item1 + 1, reindeer.Key.Item2, reindeer.Key.Item3)))
+                else if (reindeer.Key.Item3 == Direction.Down)
                 {
-                    if (visited.TryGetValue((reindeer.Key.Item1 + 1, reindeer.Key.Item2, Direction.Down), out var downValue))
+                    if (roads.Contains((reindeer.Key.Item1 + 1, reindeer.Key.Item2, Direction.Down)))
                     {
-                        if (downValue.Item1 > reindeer.Value.Item1 + 1)
+                        if (visited.TryGetValue((reindeer.Key.Item1 + 1, reindeer.Key.Item2, Direction.Down), out var downValue))
                         {
-                            visited[(reindeer.Key.Item1 + 1, reindeer.Key.Item2, Direction.Down)] = (reindeer.Value.Item1 + 1, [.. reindeer.Value.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]);
+                            if (downValue.Item1 > reindeer.Value.Item1 + 1)
+                            {
+                                visited[(reindeer.Key.Item1 + 1, reindeer.Key.Item2, Direction.Down)] = (reindeer.Value.Item1 + 1, [.. reindeer.Value.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]);
+                            }
+                            else if (downValue.Item1 == reindeer.Value.Item1 + 1)
+                            {
+                                visited[(reindeer.Key.Item1 + 1, reindeer.Key.Item2, Direction.Down)] = (reindeer.Value.Item1 + 1, [.. reindeer.Value.Item2, .. downValue.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]);
+                            }
                         }
-                        else if (downValue.Item1 == reindeer.Value.Item1 + 1)
+                        else
                         {
-                            visited[(reindeer.Key.Item1 + 1, reindeer.Key.Item2, Direction.Down)] = (reindeer.Value.Item1 + 1, [.. reindeer.Value.Item2, .. downValue.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]);
+                            visited.Add((reindeer.Key.Item1 + 1, reindeer.Key.Item2, Direction.Down), (reindeer.Value.Item1 + 1, [.. reindeer.Value.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]));
                         }
-                    }
-                    else
-                    {
-                        visited.Add((reindeer.Key.Item1 + 1, reindeer.Key.Item2, Direction.Down), (reindeer.Value.Item1 + 1, [.. reindeer.Value.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]));
                     }
 
-                    if (visited.TryGetValue((reindeer.Key.Item1 + 1, reindeer.Key.Item2, Direction.Left), out var leftValue))
+                    if (roads.Contains((reindeer.Key.Item1 + 1, reindeer.Key.Item2, Direction.Left)))
                     {
-                        if (leftValue.Item1 > reindeer.Value.Item1 + 1001)
+                        if (visited.TryGetValue((reindeer.Key.Item1 + 1, reindeer.Key.Item2, Direction.Left), out var leftValue))
                         {
-                            visited[(reindeer.Key.Item1 + 1, reindeer.Key.Item2, Direction.Left)] = (reindeer.Value.Item1 + 1001, [.. reindeer.Value.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]);
+                            if (leftValue.Item1 > reindeer.Value.Item1 + 1001)
+                            {
+                                visited[(reindeer.Key.Item1 + 1, reindeer.Key.Item2, Direction.Left)] = (reindeer.Value.Item1 + 1001, [.. reindeer.Value.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]);
+                            }
+                            else if (leftValue.Item1 == reindeer.Value.Item1 + 1001)
+                            {
+                                visited[(reindeer.Key.Item1 + 1, reindeer.Key.Item2, Direction.Left)] = (reindeer.Value.Item1 + 1001, [.. reindeer.Value.Item2, .. leftValue.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]);
+                            }
                         }
-                        else if (leftValue.Item1 == reindeer.Value.Item1 + 1001)
+                        else
                         {
-                            visited[(reindeer.Key.Item1 + 1, reindeer.Key.Item2, Direction.Left)] = (reindeer.Value.Item1 + 1001, [.. reindeer.Value.Item2, .. leftValue.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]);
+                            visited.Add((reindeer.Key.Item1 + 1, reindeer.Key.Item2, Direction.Left), (reindeer.Value.Item1 + 1001, [.. reindeer.Value.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]));
                         }
-                    }
-                    else
-                    {
-                        visited.Add((reindeer.Key.Item1 + 1, reindeer.Key.Item2, Direction.Left), (reindeer.Value.Item1 + 1001, [.. reindeer.Value.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]));
                     }
 
-                    if (visited.TryGetValue((reindeer.Key.Item1 + 1, reindeer.Key.Item2, Direction.Right), out var rightValue))
+                    if (roads.Contains((reindeer.Key.Item1 + 1, reindeer.Key.Item2, Direction.Right)))
                     {
-                        if (rightValue.Item1 > reindeer.Value.Item1 + 1001)
+                        if (visited.TryGetValue((reindeer.Key.Item1 + 1, reindeer.Key.Item2, Direction.Right), out var rightValue))
                         {
-                            visited[(reindeer.Key.Item1 + 1, reindeer.Key.Item2, Direction.Right)] = (reindeer.Value.Item1 + 1001, [.. reindeer.Value.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]);
+                            if (rightValue.Item1 > reindeer.Value.Item1 + 1001)
+                            {
+                                visited[(reindeer.Key.Item1 + 1, reindeer.Key.Item2, Direction.Right)] = (reindeer.Value.Item1 + 1001, [.. reindeer.Value.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]);
+                            }
+                            else if (rightValue.Item1 == reindeer.Value.Item1 + 1001)
+                            {
+                                visited[(reindeer.Key.Item1 + 1, reindeer.Key.Item2, Direction.Right)] = (reindeer.Value.Item1 + 1001, [.. reindeer.Value.Item2, .. rightValue.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]);
+                            }
                         }
-                        else if (rightValue.Item1 == reindeer.Value.Item1 + 1001)
+                        else
                         {
-                            visited[(reindeer.Key.Item1 + 1, reindeer.Key.Item2, Direction.Right)] = (reindeer.Value.Item1 + 1001, [.. reindeer.Value.Item2, .. rightValue.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]);
+                            visited.Add((reindeer.Key.Item1 + 1, reindeer.Key.Item2, Direction.Right), (reindeer.Value.Item1 + 1001, [.. reindeer.Value.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]));
                         }
                     }
-                    else
-                    {
-                        visited.Add((reindeer.Key.Item1 + 1, reindeer.Key.Item2, Direction.Right), (reindeer.Value.Item1 + 1001, [.. reindeer.Value.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]));
-                    }
+
                     roads.Remove((reindeer.Key.Item1 + 1, reindeer.Key.Item2, Direction.Up));
                     visited.Remove((reindeer.Key.Item1 + 1, reindeer.Key.Item2, Direction.Up));
                 }
-                else if (reindeer.Key.Item3 == Direction.Left && roads.Contains((reindeer.Key.Item1, reindeer.Key.Item2 - 1, reindeer.Key.Item3)))
+                else if (reindeer.Key.Item3 == Direction.Left)
                 {
-                    if (visited.TryGetValue((reindeer.Key.Item1, reindeer.Key.Item2 - 1, Direction.Left), out var leftValue))
+                    if (roads.Contains((reindeer.Key.Item1, reindeer.Key.Item2 - 1, Direction.Left)))
                     {
-                        if (leftValue.Item1 > reindeer.Value.Item1 + 1)
+                        if (visited.TryGetValue((reindeer.Key.Item1, reindeer.Key.Item2 - 1, Direction.Left), out var leftValue))
                         {
-                            visited[(reindeer.Key.Item1, reindeer.Key.Item2 - 1, Direction.Left)] = (reindeer.Value.Item1 + 1, [.. reindeer.Value.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]);
+                            if (leftValue.Item1 > reindeer.Value.Item1 + 1)
+                            {
+                                visited[(reindeer.Key.Item1, reindeer.Key.Item2 - 1, Direction.Left)] = (reindeer.Value.Item1 + 1, [.. reindeer.Value.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]);
+                            }
+                            else if (leftValue.Item1 == reindeer.Value.Item1 + 1)
+                            {
+                                visited[(reindeer.Key.Item1, reindeer.Key.Item2 - 1, Direction.Left)] = (reindeer.Value.Item1 + 1, [.. reindeer.Value.Item2, .. leftValue.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]);
+                            }
                         }
-                        else if (leftValue.Item1 == reindeer.Value.Item1 + 1)
+                        else
                         {
-                            visited[(reindeer.Key.Item1, reindeer.Key.Item2 - 1, Direction.Left)] = (reindeer.Value.Item1 + 1, [.. reindeer.Value.Item2, .. leftValue.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]);
+                            visited.Add((reindeer.Key.Item1, reindeer.Key.Item2 - 1, Direction.Left), (reindeer.Value.Item1 + 1, [.. reindeer.Value.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]));
                         }
-                    }
-                    else
-                    {
-                        visited.Add((reindeer.Key.Item1, reindeer.Key.Item2 - 1, Direction.Left), (reindeer.Value.Item1 + 1, [.. reindeer.Value.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]));
                     }
 
-                    if (visited.TryGetValue((reindeer.Key.Item1, reindeer.Key.Item2 - 1, Direction.Up), out var upValue))
+                    if (roads.Contains((reindeer.Key.Item1, reindeer.Key.Item2 - 1, Direction.Up)))
                     {
-                        if (upValue.Item1 > reindeer.Value.Item1 + 1001)
+                        if (visited.TryGetValue((reindeer.Key.Item1, reindeer.Key.Item2 - 1, Direction.Up), out var upValue))
                         {
-                            visited[(reindeer.Key.Item1, reindeer.Key.Item2 - 1, Direction.Up)] = (reindeer.Value.Item1 + 1001, [.. reindeer.Value.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]);
+                            if (upValue.Item1 > reindeer.Value.Item1 + 1001)
+                            {
+                                visited[(reindeer.Key.Item1, reindeer.Key.Item2 - 1, Direction.Up)] = (reindeer.Value.Item1 + 1001, [.. reindeer.Value.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]);
+                            }
+                            else if (upValue.Item1 == reindeer.Value.Item1 + 1001)
+                            {
+                                visited[(reindeer.Key.Item1, reindeer.Key.Item2 - 1, Direction.Up)] = (reindeer.Value.Item1 + 1001, [.. reindeer.Value.Item2, .. upValue.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]);
+                            }
                         }
-                        else if (upValue.Item1 == reindeer.Value.Item1 + 1001)
+                        else
                         {
-                            visited[(reindeer.Key.Item1, reindeer.Key.Item2 - 1, Direction.Up)] = (reindeer.Value.Item1 + 1001, [.. reindeer.Value.Item2, .. upValue.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]);
+                            visited.Add((reindeer.Key.Item1, reindeer.Key.Item2 - 1, Direction.Up), (reindeer.Value.Item1 + 1001, [.. reindeer.Value.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]));
                         }
-                    }
-                    else
-                    {
-                        visited.Add((reindeer.Key.Item1, reindeer.Key.Item2 - 1, Direction.Up), (reindeer.Value.Item1 + 1001, [.. reindeer.Value.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]));
                     }
 
-                    if (visited.TryGetValue((reindeer.Key.Item1, reindeer.Key.Item2 - 1, Direction.Down), out var downValue))
+                    if (roads.Contains((reindeer.Key.Item1, reindeer.Key.Item2 - 1, Direction.Down)))
                     {
-                        if (downValue.Item1 > reindeer.Value.Item1 + 1001)
+                        if (visited.TryGetValue((reindeer.Key.Item1, reindeer.Key.Item2 - 1, Direction.Down), out var downValue))
                         {
-                            visited[(reindeer.Key.Item1, reindeer.Key.Item2 - 1, Direction.Down)] = (reindeer.Value.Item1 + 1001, [.. reindeer.Value.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]);
+                            if (downValue.Item1 > reindeer.Value.Item1 + 1001)
+                            {
+                                visited[(reindeer.Key.Item1, reindeer.Key.Item2 - 1, Direction.Down)] = (reindeer.Value.Item1 + 1001, [.. reindeer.Value.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]);
+                            }
+                            else if (downValue.Item1 == reindeer.Value.Item1 + 1001)
+                            {
+                                visited[(reindeer.Key.Item1, reindeer.Key.Item2 - 1, Direction.Down)] = (reindeer.Value.Item1 + 1001, [.. reindeer.Value.Item2, .. downValue.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]);
+                            }
                         }
-                        else if (downValue.Item1 == reindeer.Value.Item1 + 1001)
+                        else
                         {
-                            visited[(reindeer.Key.Item1, reindeer.Key.Item2 - 1, Direction.Down)] = (reindeer.Value.Item1 + 1001, [.. reindeer.Value.Item2, .. downValue.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]);
+                            visited.Add((reindeer.Key.Item1, reindeer.Key.Item2 - 1, Direction.Down), (reindeer.Value.Item1 + 1001, [.. reindeer.Value.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]));
                         }
                     }
-                    else
-                    {
-                        visited.Add((reindeer.Key.Item1, reindeer.Key.Item2 - 1, Direction.Down), (reindeer.Value.Item1 + 1001, [.. reindeer.Value.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]));
-                    }
+
                     roads.Remove((reindeer.Key.Item1, reindeer.Key.Item2 - 1, Direction.Right));
                     visited.Remove((reindeer.Key.Item1, reindeer.Key.Item2 - 1, Direction.Right));
                 }
-                else if (reindeer.Key.Item3 == Direction.Right && roads.Contains((reindeer.Key.Item1, reindeer.Key.Item2 + 1, reindeer.Key.Item3)))
+                else if (reindeer.Key.Item3 == Direction.Right)
                 {
-                    if (visited.TryGetValue((reindeer.Key.Item1, reindeer.Key.Item2 + 1, Direction.Right), out var rightValue))
+                    if (roads.Contains((reindeer.Key.Item1, reindeer.Key.Item2 + 1, Direction.Right)))
                     {
-                        if (rightValue.Item1 > reindeer.Value.Item1 + 1)
+                        if (visited.TryGetValue((reindeer.Key.Item1, reindeer.Key.Item2 + 1, Direction.Right), out var rightValue))
                         {
-                            visited[(reindeer.Key.Item1, reindeer.Key.Item2 + 1, Direction.Right)] = (reindeer.Value.Item1 + 1, [.. reindeer.Value.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]);
+                            if (rightValue.Item1 > reindeer.Value.Item1 + 1)
+                            {
+                                visited[(reindeer.Key.Item1, reindeer.Key.Item2 + 1, Direction.Right)] = (reindeer.Value.Item1 + 1, [.. reindeer.Value.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]);
+                            }
+                            else if (rightValue.Item1 == reindeer.Value.Item1 + 1)
+                            {
+                                visited[(reindeer.Key.Item1, reindeer.Key.Item2 + 1, Direction.Right)] = (reindeer.Value.Item1 + 1, [.. reindeer.Value.Item2, .. rightValue.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]);
+                            }
                         }
-                        else if (rightValue.Item1 == reindeer.Value.Item1 + 1)
+                        else
                         {
-                            visited[(reindeer.Key.Item1, reindeer.Key.Item2 + 1, Direction.Right)] = (reindeer.Value.Item1 + 1, [.. reindeer.Value.Item2, .. rightValue.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]);
+                            visited.Add((reindeer.Key.Item1, reindeer.Key.Item2 + 1, Direction.Right), (reindeer.Value.Item1 + 1, [.. reindeer.Value.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]));
                         }
-                    }
-                    else
-                    {
-                        visited.Add((reindeer.Key.Item1, reindeer.Key.Item2 + 1, Direction.Right), (reindeer.Value.Item1 + 1, [.. reindeer.Value.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]));
                     }
 
-                    if (visited.TryGetValue((reindeer.Key.Item1, reindeer.Key.Item2 + 1, Direction.Up), out var upValue))
+                    if (roads.Contains((reindeer.Key.Item1, reindeer.Key.Item2 + 1, Direction.Up)))
                     {
-                        if (upValue.Item1 > reindeer.Value.Item1 + 1001)
+                        if (visited.TryGetValue((reindeer.Key.Item1, reindeer.Key.Item2 + 1, Direction.Up), out var upValue))
                         {
-                            visited[(reindeer.Key.Item1, reindeer.Key.Item2 + 1, Direction.Up)] = (reindeer.Value.Item1 + 1001, [.. reindeer.Value.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]);
+                            if (upValue.Item1 > reindeer.Value.Item1 + 1001)
+                            {
+                                visited[(reindeer.Key.Item1, reindeer.Key.Item2 + 1, Direction.Up)] = (reindeer.Value.Item1 + 1001, [.. reindeer.Value.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]);
+                            }
+                            else if (upValue.Item1 == reindeer.Value.Item1 + 1001)
+                            {
+                                visited[(reindeer.Key.Item1, reindeer.Key.Item2 + 1, Direction.Up)] = (reindeer.Value.Item1 + 1001, [.. reindeer.Value.Item2, .. upValue.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]);
+                            }
                         }
-                        else if (upValue.Item1 == reindeer.Value.Item1 + 1001)
+                        else
                         {
-                            visited[(reindeer.Key.Item1, reindeer.Key.Item2 + 1, Direction.Up)] = (reindeer.Value.Item1 + 1001, [.. reindeer.Value.Item2, .. upValue.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]);
+                            visited.Add((reindeer.Key.Item1, reindeer.Key.Item2 + 1, Direction.Up), (reindeer.Value.Item1 + 1001, [.. reindeer.Value.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]));
                         }
-                    }
-                    else
-                    {
-                        visited.Add((reindeer.Key.Item1, reindeer.Key.Item2 + 1, Direction.Up), (reindeer.Value.Item1 + 1001, [.. reindeer.Value.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]));
                     }
 
-                    if (visited.TryGetValue((reindeer.Key.Item1, reindeer.Key.Item2 + 1, Direction.Down), out var downValue))
+                    if (roads.Contains((reindeer.Key.Item1, reindeer.Key.Item2 + 1, Direction.Down)))
                     {
-                        if (downValue.Item1 > reindeer.Value.Item1 + 1001)
+                        if (visited.TryGetValue((reindeer.Key.Item1, reindeer.Key.Item2 + 1, Direction.Down), out var downValue))
                         {
-                            visited[(reindeer.Key.Item1, reindeer.Key.Item2 + 1, Direction.Down)] = (reindeer.Value.Item1 + 1001, [.. reindeer.Value.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]);
+                            if (downValue.Item1 > reindeer.Value.Item1 + 1001)
+                            {
+                                visited[(reindeer.Key.Item1, reindeer.Key.Item2 + 1, Direction.Down)] = (reindeer.Value.Item1 + 1001, [.. reindeer.Value.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]);
+                            }
+                            else if (downValue.Item1 == reindeer.Value.Item1 + 1001)
+                            {
+                                visited[(reindeer.Key.Item1, reindeer.Key.Item2 + 1, Direction.Down)] = (reindeer.Value.Item1 + 1001, [.. reindeer.Value.Item2, .. downValue.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]);
+                            }
                         }
-                        else if (downValue.Item1 == reindeer.Value.Item1 + 1001)
+                        else
                         {
-                            visited[(reindeer.Key.Item1, reindeer.Key.Item2 + 1, Direction.Down)] = (reindeer.Value.Item1 + 1001, [.. reindeer.Value.Item2, .. downValue.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]);
+                            visited.Add((reindeer.Key.Item1, reindeer.Key.Item2 + 1, Direction.Down), (reindeer.Value.Item1 + 1001, [.. reindeer.Value.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]));
                         }
                     }
-                    else
-                    {
-                        visited.Add((reindeer.Key.Item1, reindeer.Key.Item2 + 1, Direction.Down), (reindeer.Value.Item1 + 1001, [.. reindeer.Value.Item2, (reindeer.Key.Item1, reindeer.Key.Item2)]));
-                    }
+
                     roads.Remove((reindeer.Key.Item1, reindeer.Key.Item2 + 1, Direction.Left));
                     visited.Remove((reindeer.Key.Item1, reindeer.Key.Item2 + 1, Direction.Left));
                 }
