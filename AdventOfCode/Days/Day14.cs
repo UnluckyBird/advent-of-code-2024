@@ -123,6 +123,7 @@ namespace AdventOfCode.Days
             for (int i = 0; i < 8000; i++)
             {
                 Dictionary<(int, int), List<(int, int)>> newRobots = [];
+                bool isTree = true;
                 foreach (var robotList in robots)
                 {
                     foreach (var robot in robotList.Value)
@@ -148,57 +149,17 @@ namespace AdventOfCode.Days
                         if (newRobots.TryAdd((x, y), [(robot.Item1, robot.Item2)]) == false)
                         {
                             newRobots[(x, y)].Add((robot.Item1, robot.Item2));
+                            isTree = false;
                         }
                     }
                 }
                 robots = newRobots;
-                
-                bool resultFound = false;
-                for (int j = 0; j < gridSize.Item1; j++)
+
+                if (isTree)
                 {
-                    int line = 0;
-                    for (int k = 0; k < gridSize.Item2; k++)
-                    {
-                        if (robots.ContainsKey((j, k)))
-                        {
-                            line += 1;
-                        }
-                        else
-                        {
-                            line = 0;
-                        }
-                        if (line > 10)
-                        {
-                            resultFound = true;
-                            result = i + 1;
-                            break;
-                        }
-                    }
-                    if (resultFound)
-                    {
-                        break;
-                    }
+                    result = i + 1;
+                    break;
                 }
-                
-                /*if (resultFound)
-                {
-                    for (int j = 0; j < gridSize.Item2; j++)
-                    {
-                        string line = "";
-                        for (int k = 0; k < gridSize.Item1; k++)
-                        {
-                            if (robots.ContainsKey((k, j)))
-                            {
-                                line += '#';
-                            }
-                            else
-                            {
-                                line += ' ';
-                            }
-                        }
-                        Console.WriteLine(line);
-                    }
-                }*/
             }
             
             return result;

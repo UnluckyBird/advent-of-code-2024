@@ -151,42 +151,47 @@ namespace AdventOfCode.Days
                         if (inputs[i - 1][j] == '.')
                         {
                             roads.Add((i, j, Direction.Up));
-                            roads.Add((i - 1, j, Direction.Down));
                             visited.Add((i, j, Direction.Up), (1000, []));
                         }
                         if (inputs[i + 1][j] == '.')
                         {
                             roads.Add((i, j, Direction.Down));
-                            roads.Add((i + 1, j, Direction.Up));
                             visited.Add((i, j, Direction.Down), (1000, []));
                         }
                         if (inputs[i][j - 1] == '.')
                         {
                             roads.Add((i, j, Direction.Left));
-                            roads.Add((i, j - 1, Direction.Right));
                             visited.Add((i, j, Direction.Left), (2000, []));
                         }
                         if (inputs[i][j + 1] == '.')
                         {
                             roads.Add((i, j, Direction.Right));
-                            roads.Add((i, j + 1, Direction.Left));
                             visited.Add((i, j, Direction.Right), (0, []));
                         }                        
                     }
                     else if (inputs[i][j] == 'E')
                     {
                         finish = (i, j);
-                        roads.Add((i, j, Direction.Up));
-                        roads.Add((i - 1, j, Direction.Down));
-
-                        roads.Add((i, j, Direction.Down));
-                        roads.Add((i + 1, j, Direction.Up));
-
-                        roads.Add((i, j, Direction.Left));
-                        roads.Add((i, j - 1, Direction.Right));
-
-                        roads.Add((i, j, Direction.Right));
-                        roads.Add((i, j + 1, Direction.Left));
+                        if (inputs[i - 1][j] == '.')
+                        {
+                            roads.Add((i, j, Direction.Down));
+                            roads.Add((i - 1, j, Direction.Down));
+                        }
+                        if (inputs[i + 1][j] == '.')
+                        {
+                            roads.Add((i, j, Direction.Up));
+                            roads.Add((i + 1, j, Direction.Up));
+                        }
+                        if (inputs[i][j - 1] == '.')
+                        {
+                            roads.Add((i, j, Direction.Right));
+                            roads.Add((i, j - 1, Direction.Right));
+                        }
+                        if (inputs[i][j + 1] == '.')
+                        {
+                            roads.Add((i, j, Direction.Left));
+                            roads.Add((i, j + 1, Direction.Left));
+                        }  
                     }
                 }
             }
