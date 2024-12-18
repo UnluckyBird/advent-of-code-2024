@@ -80,83 +80,91 @@ namespace AdventOfCode.Days
         {
             string result = "";
             string[] inputs = File.ReadAllLines(AppContext.BaseDirectory + "\\Data\\Day18.1.txt");
+            List<(int, int)> allWalls = [];
             HashSet<(int, int)> walls = [];
-            Queue<(int, int)> unusedWalls = [];
             HashSet<(int, int)> visited = [];
-            PriorityQueue<(int, int, HashSet<(int, int)>), int> queue = new();
-            queue.Enqueue((0, 0, []), 0);
             (int, int) gridSize = (70, 70);
-            int startFill = 1024;
-
-            for (int i = 0; i < startFill; i++)
+            
+            for (int i = 0; i < inputs.Length; i++)
             {
                 List<int> wall = inputs[i].Split(',').Select(int.Parse).ToList();
-                walls.Add((wall[0], wall[1]));
+                allWalls.Add((wall[0], wall[1]));
             }
-            for (int i = startFill; i < inputs.Length; i++)
+            int lower = 0;
+            int upper = allWalls.Count - 1;
+            PriorityQueue<(int, int), int> queue = new();
+            queue.Enqueue((0, 0), 0);
+            (int, int) lastFailedWall = (0,0);
+            while (lower != upper)
             {
-                List<int> wall = inputs[i].Split(',').Select(int.Parse).ToList();
-                unusedWalls.Enqueue((wall[0], wall[1]));
+                bool succeeded = false;
+                int check = (upper + lower) / 2;
+                walls = [..allWalls[..(check + 1)]];
+                while (queue.TryDequeue(out var historian, out int priority))
+                {
+                    if (historian == gridSize)
+                    {
+                        succeeded = true;
+                        break;
+                    }
+                    else if (historian.Item1 < 0 || historian.Item2 < 0 || historian.Item1 > gridSize.Item1 || historian.Item2 > gridSize.Item2)
+                    {
+                        continue;
+                    }
+
+                    if (walls.Contains((historian.Item1 - 1, historian.Item2)) == false)
+                    {
+                        if (visited.Contains((historian.Item1 - 1, historian.Item2)) == false)
+                        {
+                            visited.Add((historian.Item1 - 1, historian.Item2));
+                            queue.Enqueue((historian.Item1 - 1, historian.Item2), priority + 1);
+                        }
+                    }
+
+                    if (walls.Contains((historian.Item1 + 1, historian.Item2)) == false)
+                    {
+                        if (visited.Contains((historian.Item1 + 1, historian.Item2)) == false)
+                        {
+                            visited.Add((historian.Item1 + 1, historian.Item2));
+                            queue.Enqueue((historian.Item1 + 1, historian.Item2), priority + 1);
+                        }
+                    }
+
+
+                    if (walls.Contains((historian.Item1, historian.Item2 - 1)) == false)
+                    {
+                        if (visited.Contains((historian.Item1, historian.Item2 - 1)) == false)
+                        {
+                            visited.Add((historian.Item1, historian.Item2 - 1));
+                            queue.Enqueue((historian.Item1, historian.Item2 - 1), priority + 1);
+                        }
+                    }
+
+                    if (walls.Contains((historian.Item1, historian.Item2 + 1)) == false)
+                    {
+                        if (visited.Contains((historian.Item1, historian.Item2 + 1)) == false)
+                        {
+                            visited.Add((historian.Item1, historian.Item2 + 1));
+                            queue.Enqueue((historian.Item1, historian.Item2 + 1), priority + 1);
+                        }
+                    }
+                    
+                }
+                queue.Clear();
+                visited.Clear();
+                queue.Enqueue((0, 0), 0);
+                visited.Add((0, 0));
+                if (succeeded)
+                {
+                    lower = check + 1;
+                }
+                else
+                {
+                    upper = check;
+                    lastFailedWall = allWalls[check];
+                }
             }
-
-            (int, int) lastUsedWall = (0,0);
-            while (queue.TryDequeue(out var historian, out int priority))
-            {
-                if (historian.Item1 == gridSize.Item1 && historian.Item2 == gridSize.Item2)
-                {
-                    do
-                    {
-                        lastUsedWall = unusedWalls.Dequeue();
-                        walls.Add(lastUsedWall);
-                    } while (historian.Item3.Contains(lastUsedWall) == false);
-                    visited.Clear();
-                    queue.Clear();
-                    queue.Enqueue((0, 0, []), 0);
-                    continue;
-                }
-                else if (historian.Item1 < 0 || historian.Item2 < 0 || historian.Item1 > gridSize.Item1 || historian.Item2 > gridSize.Item2)
-                {
-                    continue;
-                }
-
-                if (walls.Contains((historian.Item1 - 1, historian.Item2)) == false)
-                {
-                    if (visited.Contains((historian.Item1 - 1, historian.Item2)) == false)
-                    {
-                        visited.Add((historian.Item1 - 1, historian.Item2));
-                        queue.Enqueue((historian.Item1 - 1, historian.Item2, [.. historian.Item3, (historian.Item1, historian.Item2)]), priority + 1);
-                    }
-                }
-
-                if (walls.Contains((historian.Item1 + 1, historian.Item2)) == false)
-                {
-                    if (visited.Contains((historian.Item1 + 1, historian.Item2)) == false)
-                    {
-                        visited.Add((historian.Item1 + 1, historian.Item2));
-                        queue.Enqueue((historian.Item1 + 1, historian.Item2, [.. historian.Item3, (historian.Item1, historian.Item2)]), priority + 1);
-                    }
-                }
-
-
-                if (walls.Contains((historian.Item1, historian.Item2 - 1)) == false)
-                {
-                    if (visited.Contains((historian.Item1, historian.Item2 - 1)) == false)
-                    {
-                        visited.Add((historian.Item1, historian.Item2 - 1));
-                        queue.Enqueue((historian.Item1, historian.Item2 - 1, [.. historian.Item3, (historian.Item1, historian.Item2)]), priority + 1);
-                    }
-                }
-
-                if (walls.Contains((historian.Item1, historian.Item2 + 1)) == false)
-                {
-                    if (visited.Contains((historian.Item1, historian.Item2 + 1)) == false)
-                    {
-                        visited.Add((historian.Item1, historian.Item2 + 1));
-                        queue.Enqueue((historian.Item1, historian.Item2 + 1, [.. historian.Item3, (historian.Item1, historian.Item2)]), priority + 1);
-                    }
-                }
-            }
-            result = $"{lastUsedWall.Item1},{lastUsedWall.Item2}";
+            result = $"{lastFailedWall.Item1},{lastFailedWall.Item2}";
             return result;
         }
     }
