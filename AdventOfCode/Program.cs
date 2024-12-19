@@ -136,6 +136,13 @@ namespace AdventOfCode
             Console.WriteLine("Day 18.2: " + Day18.Part2());
             Console.WriteLine($"Day 18 Execution Time: {Stopwatch.GetElapsedTime(startDay18Time).TotalMilliseconds} ms");
             Console.WriteLine($"Total Execution Time: {Stopwatch.GetElapsedTime(startTime).TotalMilliseconds} ms");
+
+            //Day 19
+            var startDay19Time = Stopwatch.GetTimestamp();
+            Console.WriteLine("Day 19.1: " + Day19.Part1());
+            Console.WriteLine("Day 19.2: " + Day19.Part2());
+            Console.WriteLine($"Day 19 Execution Time: {Stopwatch.GetElapsedTime(startDay19Time).TotalMilliseconds} ms");
+            Console.WriteLine($"Total Execution Time: {Stopwatch.GetElapsedTime(startTime).TotalMilliseconds} ms");
         }
     }
 }
