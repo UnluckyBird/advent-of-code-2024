@@ -145,7 +145,7 @@ namespace AdventOfCode.Days
                 }
             }
 
-            for (int i = 0; i < visited.Count-1; i++)
+            for (int i = 0; i < visited.Count - 1; i++)
             {
                 var current = visited.GetAt(i);
                 for (int j = i + cheatCutoff; j < visited.Count; j++)
@@ -159,9 +159,9 @@ namespace AdventOfCode.Days
                             result++;
                         }
                     }
-                    else if (distance > 40)
+                    else
                     {
-                        j += distance / 2;
+                        j += distance - 21;
                     }
                 }
             }
