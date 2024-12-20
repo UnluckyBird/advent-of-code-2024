@@ -97,7 +97,7 @@ namespace AdventOfCode.Days
             (int, int) position = (0, 0);
             (int, int) finish = (0, 0);
             int cheatCutoff = 100;
-
+            
             for (int i = 0; i < inputs.Length; i++)
             {
                 for (int j = 0; j < inputs[i].Length; j++)
@@ -119,7 +119,7 @@ namespace AdventOfCode.Days
                     }
                 }
             }
-
+            
             int time = 1;
             while (position != finish)
             {
@@ -145,78 +145,26 @@ namespace AdventOfCode.Days
                 }
             }
 
-            List<int> cheatLengths = [];
-            foreach (var pair in visited)
+            for (int i = 0; i < visited.Count-1; i++)
             {
-                HashSet<(int, int)> bfsVisited = [pair.Key];
-                PriorityQueue<(int, int), int> pq = new();
-                pq.Enqueue(pair.Key, 0);
-                while (pq.TryDequeue(out var cheat, out int priority) && priority < 20)
+                var current = visited.GetAt(i);
+                for (int j = i + cheatCutoff; j < visited.Count; j++)
                 {
-                    if (cheat.Item1 - 1 > 0)
+                    var next = visited.GetAt(j);
+                    int distance = Math.Abs(current.Key.Item1 - next.Key.Item1) + Math.Abs(current.Key.Item2 - next.Key.Item2);
+                    if (distance <= 20)
                     {
-                        if (bfsVisited.Add((cheat.Item1 - 1, cheat.Item2)))
+                        if (next.Value - current.Value - distance >= cheatCutoff)
                         {
-                            if (visited.TryGetValue((cheat.Item1 - 1, cheat.Item2), out int upValue))
-                            {
-                                if (upValue - pair.Value - 1 - priority >= cheatCutoff)
-                                {
-                                    cheatLengths.Add(upValue - pair.Value - 1 - priority);
-                                }
-                            }
-                            pq.Enqueue((cheat.Item1 - 1, cheat.Item2), priority + 1);
+                            result++;
                         }
                     }
-
-                    if (cheat.Item1 + 1 < inputs.Length)
+                    else if (distance > 40)
                     {
-                        if (bfsVisited.Add((cheat.Item1 + 1, cheat.Item2)))
-                        {
-                            if (visited.TryGetValue((cheat.Item1 + 1, cheat.Item2), out int downValue))
-                            {
-                                if (downValue - pair.Value - 1 - priority >= cheatCutoff)
-                                {
-                                    cheatLengths.Add(downValue - pair.Value - 1 - priority);
-                                }
-                            }
-                            pq.Enqueue((cheat.Item1 + 1, cheat.Item2), priority + 1);
-                        }
-                    }
-
-
-                    if (cheat.Item2 - 1 > 0)
-                    {
-                        if (bfsVisited.Add((cheat.Item1, cheat.Item2 - 1)))
-                        {
-                            if (visited.TryGetValue((cheat.Item1, cheat.Item2 - 1), out int leftValue))
-                            {
-                                if (leftValue - pair.Value - 1 - priority >= cheatCutoff)
-                                {
-                                    cheatLengths.Add(leftValue - pair.Value - 1 - priority);
-                                }
-                            }
-                            pq.Enqueue((cheat.Item1, cheat.Item2 - 1), priority + 1);
-                        }
-                    }
-
-                    if (cheat.Item2 + 1 < inputs[0].Length)
-                    {
-                        if (bfsVisited.Add((cheat.Item1, cheat.Item2 + 1)))
-                        {
-                            if (visited.TryGetValue((cheat.Item1, cheat.Item2 + 1), out int rightValue))
-                            {
-                                if (rightValue - pair.Value - 1 - priority >= cheatCutoff)
-                                {
-                                    cheatLengths.Add(rightValue - pair.Value - 1 - priority);
-                                }
-
-                            }
-                            pq.Enqueue((cheat.Item1, cheat.Item2 + 1), priority + 1);
-                        }
+                        j += distance / 2;
                     }
                 }
             }
-            result = cheatLengths.Count;
             return result;
         }
     }
