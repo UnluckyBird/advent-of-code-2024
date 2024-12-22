@@ -1,8 +1,7 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace AdventOfCode.Days
@@ -34,56 +33,37 @@ namespace AdventOfCode.Days
             long result = 0;
             string[] inputs = File.ReadAllLines(AppContext.BaseDirectory + "\\Data\\Day22.1.txt");
 
-            List<Dictionary<string, long>> allDifferences = [];
-
-            foreach (string input in inputs)
+            ConcurrentDictionary<int, long> sequences = [];
+            Parallel.ForEach(inputs, input =>
             {
-                Dictionary<string, long> differences = [];
+                HashSet<int> seenSequences = [];
                 long res = long.Parse(input);
-                Queue<long> sequence = new();
+                int numSeq = 0;
                 for (int i = 0; i < 2000; i++)
                 {
                     long lastRes = res % 10;
                     res = ((res << 6) ^ res) % 16777216;
                     res = ((res >> 5) ^ res);
                     res = ((res << 11) ^ res) % 16777216;
-                    long diff = (res % 10) - lastRes;
-                    sequence.Enqueue(diff);
-                    if (sequence.Count == 4)
-                    {
-                        string seq = "";
-                        foreach (int num in sequence)
-                        {
-                            seq += num.ToString();
-                        }
-                        sequence.Dequeue();
-                        if (differences.TryGetValue(seq, out long value) == false)
-                        {
-                            differences[seq] = res % 10;
-                        }
-                    }
-                }
-                allDifferences.Add(differences);
-            }
+                    long diff = (res % 10) - lastRes + 9;
 
-            Parallel.For(-9, 10, (i) =>
-            {
-                Parallel.For(-9, 10, (j) =>
-                {
-                    for (int k = -9; k < 10; k++)
+                    numSeq = (int)diff + numSeq;
+
+                    if (i >= 3)
                     {
-                        for (int l = -9; l < 10; l++)
+                        if (seenSequences.Add(numSeq))
                         {
-                            string seq = i.ToString() + j.ToString() + k.ToString() + l.ToString();
-                            long res = allDifferences.Sum(x => x.TryGetValue(seq, out long value) ? value : 0);
-                            if (res > result)
+                            sequences.AddOrUpdate(numSeq, res % 10, (key, oldValue) => oldValue + (res % 10));
+
+                            if (sequences.TryGetValue(numSeq, out long value) && result < value)
                             {
-                                Interlocked.Exchange(ref result, res);
+                                result = value;
                             }
                         }
                     }
-                });
-            });
+                    numSeq = (numSeq << 5) & 0b11111111111111111111;
+                }
+            });  
 
             return result;
         }

@@ -153,8 +153,8 @@ namespace AdventOfCode
 
             //Day 21
             var startDay21Time = Stopwatch.GetTimestamp();
-            //Console.WriteLine("Day 21.1: " + Day21.Part1());
-            //Console.WriteLine("Day 21.2: " + Day21.Part2());
+            Console.WriteLine("Day 21.1: " + Day21.Part1());
+            Console.WriteLine("Day 21.2: " + Day21.Part2());
             Console.WriteLine($"Day 21 Execution Time: {Stopwatch.GetElapsedTime(startDay21Time).TotalMilliseconds} ms");
             Console.WriteLine($"Total Execution Time: {Stopwatch.GetElapsedTime(startTime).TotalMilliseconds} ms");
 
