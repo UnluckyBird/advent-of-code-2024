@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace AdventOfCode.Days
 {
@@ -110,7 +112,6 @@ namespace AdventOfCode.Days
             (int, int) gridSize = (101, 103);
             string[] inputs = File.ReadAllLines(AppContext.BaseDirectory + "\\Data\\Day14.1.txt");
             Dictionary<(int, int), List<(int, int)>> robots = [];
-
             foreach (string input in inputs)
             {
                 var robot = input.Substring(2).Replace("v=", ",").Split(',').Select(int.Parse).ToList();
@@ -120,47 +121,30 @@ namespace AdventOfCode.Days
                 }
             }
 
-            for (int i = 0; i < 8000; i++)
+            Parallel.For(1, 8000, (i, state) =>
             {
-                Dictionary<(int, int), List<(int, int)>> newRobots = [];
+                HashSet<(int, int)> newRobots = [];
                 bool isTree = true;
                 foreach (var robotList in robots)
                 {
                     foreach (var robot in robotList.Value)
                     {
-                        int x = robotList.Key.Item1 + robot.Item1;
-                        int y = robotList.Key.Item2 + robot.Item2;
-                        if (x < 0)
+                        int x = ((robotList.Key.Item1 + robot.Item1 * i) % gridSize.Item1 + gridSize.Item1) % gridSize.Item1;
+                        int y = ((robotList.Key.Item2 + robot.Item2 * i) % gridSize.Item2 + gridSize.Item2) % gridSize.Item2;
+
+                        if (newRobots.Add((x, y)) == false)
                         {
-                            x += gridSize.Item1;
-                        }
-                        else if (x >= gridSize.Item1)
-                        {
-                            x -= gridSize.Item1;
-                        }
-                        if (y < 0)
-                        {
-                            y += gridSize.Item2;
-                        }
-                        else if (y >= gridSize.Item2)
-                        {
-                            y -= gridSize.Item2;
-                        }
-                        if (newRobots.TryAdd((x, y), [(robot.Item1, robot.Item2)]) == false)
-                        {
-                            newRobots[(x, y)].Add((robot.Item1, robot.Item2));
                             isTree = false;
                         }
                     }
                 }
-                robots = newRobots;
 
                 if (isTree)
                 {
-                    result = i + 1;
-                    break;
+                    result = i;
+                    state.Stop();
                 }
-            }
+            });
             
             return result;
         }

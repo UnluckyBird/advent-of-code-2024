@@ -185,53 +185,37 @@ namespace AdventOfCode.Days
             {
                 if (player.Item3 == Direction.Up)
                 {
-                    if (obstacles.Contains((player.Item1 - 1, player.Item2)) == false)
+                    while (obstacles.Contains((player.Item1 - 1, player.Item2)) == false && player.Item1 > 0)
                     {
                         player.Item1 -= 1;
                     }
-                    else
-                    {
-                        road.Add((player.Item1, player.Item2, player.Item3));
-                        player.Item3 = Direction.Right;
-                    }
+                    player.Item3 = Direction.Right;
                 }
                 else if (player.Item3 == Direction.Right)
                 {
-                    if (obstacles.Contains((player.Item1, player.Item2 + 1)) == false)
+                    while (obstacles.Contains((player.Item1, player.Item2 + 1)) == false && player.Item2 < Size)
                     {
                         player.Item2 += 1;
                     }
-                    else
-                    {
-                        road.Add((player.Item1, player.Item2, player.Item3));
-                        player.Item3 = Direction.Down;
-                    }
+                    player.Item3 = Direction.Down;
                 }
                 else if (player.Item3 == Direction.Down)
                 {
-                    if (obstacles.Contains((player.Item1 + 1, player.Item2)) == false)
+                    while (obstacles.Contains((player.Item1 + 1, player.Item2)) == false && player.Item1 < Size)
                     {
                         player.Item1 += 1;
                     }
-                    else
-                    {
-                        road.Add((player.Item1, player.Item2, player.Item3));
-                        player.Item3 = Direction.Left;
-                    }
+                    player.Item3 = Direction.Left;
                 }
                 else if (player.Item3 == Direction.Left)
                 {
-                    if (obstacles.Contains((player.Item1, player.Item2 - 1)) == false)
+                    while (obstacles.Contains((player.Item1, player.Item2 - 1)) == false && player.Item2 > 0)
                     {
                         player.Item2 -= 1;
                     }
-                    else
-                    {
-                        road.Add((player.Item1, player.Item2, player.Item3));
-                        player.Item3 = Direction.Up;
-                    }
+                    player.Item3 = Direction.Up;
                 }
-                if (road.Contains(player))
+                if (road.Add(player) == false)
                 {
                     return true;
                 }
