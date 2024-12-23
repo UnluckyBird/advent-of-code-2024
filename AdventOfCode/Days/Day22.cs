@@ -38,14 +38,17 @@ namespace AdventOfCode.Days
             {
                 HashSet<int> seenSequences = [];
                 long res = long.Parse(input);
+                long lastRes = 0;
+                long diff = 0;
                 int numSeq = 0;
+
                 for (int i = 0; i < 2000; i++)
                 {
-                    long lastRes = res % 10;
-                    res = ((res << 6) ^ res) % 16777216;
+                    lastRes = res % 10;
+                    res = ((res << 6) ^ res) & 16777215;
                     res = ((res >> 5) ^ res);
-                    res = ((res << 11) ^ res) % 16777216;
-                    long diff = (res % 10) - lastRes + 9;
+                    res = ((res << 11) ^ res) & 16777215;
+                    diff = (res % 10) - lastRes + 9;
 
                     numSeq = (int)diff + numSeq;
 
