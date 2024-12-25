@@ -7,16 +7,16 @@ namespace AdventOfCode.Days
 {
     public class Day23
     {
-        public static long Part1()
+        public static int Part1()
         {
-            long result = 0;
+            int result = 0;
             string[] inputs = File.ReadAllLines(AppContext.BaseDirectory + "\\Data\\Day23.1.txt");
-            Dictionary<string, List<string>> connections = [];
-            HashSet<string> parties = [];
+            Dictionary<string, HashSet<string>> connections = [];
+            HashSet<SortedSet<string>> parties = new(SortedSet<string>.CreateSetComparer());
 
             foreach (string input in inputs)
             {
-                if (connections.TryGetValue(input[0..2], out List<string> firstList))
+                if (connections.TryGetValue(input[0..2], out HashSet<string> firstList))
                 {
                     firstList.Add(input[3..5]);
                 }
@@ -25,7 +25,7 @@ namespace AdventOfCode.Days
                     connections[input[0..2]] = [input[3..5]];
                 }
 
-                if (connections.TryGetValue(input[3..5], out List<string> secondList))
+                if (connections.TryGetValue(input[3..5], out HashSet<string> secondList))
                 {
                     secondList.Add(input[0..2]);
                 }
@@ -37,18 +37,13 @@ namespace AdventOfCode.Days
 
             foreach (var connection in connections)
             {
-                if (IsParty(connection.Key, 0 , 3, connections, out var party))
-                {
-                    foreach (var p in party)
-                    {
-                        var pa = p.Split(',').ToList();
-                        if (pa.Any(x => x.StartsWith('t')))
-                        {
-                            pa.Sort();
-                            parties.Add(string.Join("", pa));
-                        }
-                    }
-                }
+                var p = IsPartyOfThree([connection.Key], connection.Key, connections);
+                p.ForEach(x => 
+                { 
+                    if (x.Any(y => y[0] == 't')) {
+                        parties.Add(x);
+                    } 
+                });
             }
 
             result = parties.Count;
@@ -96,30 +91,24 @@ namespace AdventOfCode.Days
             return result;
         }
 
-        private static bool IsParty(string connection, int depth, int endDepth, Dictionary<string, List<string>> connections, out List<string> party)
+        private static List<SortedSet<string>> IsPartyOfThree(SortedSet<string> connection, string check, Dictionary<string, HashSet<string>> connections)
         {
-            if (depth == endDepth && connection[0..2] == connection[^2..])
+            if (connection.Count == 3)
             {
-                party = [connection[..^3]];
-                return true;
-            }
-            else if (depth >= endDepth)
-            {
-                party = [];
-                return false;
+                return [connection];
             }
 
-            party = [];
-            bool isParty = false;
-            foreach (var input in connections[connection[^2..]])
+            List<SortedSet<string>> allThrees = [];
+            HashSet<string> checkConnections = connections[check];
+            foreach (string checkConn in checkConnections)
             {
-                if (IsParty(connection + "," + input, depth + 1, endDepth, connections, out var list))
+                HashSet<string> hsh = connections[checkConn];
+                if (connection.All(hsh.Contains))
                 {
-                    party.AddRange(list);
-                    isParty = true;
+                    allThrees.AddRange(IsPartyOfThree([.. connection, checkConn], checkConn, connections));
                 }
             }
-            return isParty;
+            return allThrees;
         }
 
         private static SortedSet<string> LargestParty(SortedSet<string> connection, string check, Dictionary<string, HashSet<string>> connections, HashSet<string> checkedNodes)
