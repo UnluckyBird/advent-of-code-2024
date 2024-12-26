@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace AdventOfCode.Days
 {
@@ -12,7 +15,7 @@ namespace AdventOfCode.Days
             int result = 0;
             string[] inputs = File.ReadAllLines(AppContext.BaseDirectory + "\\Data\\Day23.1.txt");
             Dictionary<string, HashSet<string>> connections = [];
-            HashSet<SortedSet<string>> parties = new(SortedSet<string>.CreateSetComparer());
+            ConcurrentDictionary<string, int> parties = [];
 
             foreach (string input in inputs)
             {
@@ -34,18 +37,19 @@ namespace AdventOfCode.Days
                     connections[input[3..5]] = [input[0..2]];
                 }
             }
-
-            foreach (var connection in connections)
+            
+            Parallel.ForEach(connections, (connection) =>
             {
                 var p = IsPartyOfThree([connection.Key], connection.Key, connections);
-                p.ForEach(x => 
-                { 
-                    if (x.Any(y => y[0] == 't')) {
-                        parties.Add(x);
-                    } 
+                p.ForEach(x =>
+                {
+                    if (x.Any(y => y[0] == 't'))
+                    {
+                        parties.TryAdd(string.Join("", x), 0);
+                    }
                 });
-            }
-
+            });
+            
             result = parties.Count;
             return result;
         }
@@ -78,14 +82,14 @@ namespace AdventOfCode.Days
             }
 
             SortedSet<string> largest = [];
-            foreach (var connection in connections)
+            Parallel.ForEach(connections, (connection) =>
             {
                 SortedSet<string> party = LargestParty([], connection.Key, connections, []);
                 if (party.Count > largest.Count)
                 {
-                    largest = party;
+                    Interlocked.Exchange(ref largest, party);
                 }
-            }
+            });
 
             result = string.Join(',', largest);
             return result;

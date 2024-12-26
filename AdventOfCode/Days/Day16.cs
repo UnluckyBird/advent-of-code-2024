@@ -60,10 +60,6 @@ namespace AdventOfCode.Days
                             {
                                 visited[(reindeer.Item1 - 1, reindeer.Item2, Direction.Up)] = priority + 1;
                             }
-                            else if (upValue == priority + 1)
-                            {
-                                visited[(reindeer.Item1 - 1, reindeer.Item2, Direction.Up)] = priority + 1;
-                            }
                         }
                         else
                         {
@@ -80,10 +76,6 @@ namespace AdventOfCode.Days
                             {
                                 visited[(reindeer.Item1 - 1, reindeer.Item2, Direction.Left)] = priority + 1001;
                             }
-                            else if (leftValue == priority + 1001)
-                            {
-                                visited[(reindeer.Item1 - 1, reindeer.Item2, Direction.Left)] = priority + 1001;
-                            }
                         }
                         else
                         {
@@ -97,10 +89,6 @@ namespace AdventOfCode.Days
                         if (visited.TryGetValue((reindeer.Item1 - 1, reindeer.Item2, Direction.Right), out var rightValue))
                         {
                             if (rightValue > priority + 1001)
-                            {
-                                visited[(reindeer.Item1 - 1, reindeer.Item2, Direction.Right)] = priority + 1001;
-                            }
-                            else if (rightValue == priority + 1001)
                             {
                                 visited[(reindeer.Item1 - 1, reindeer.Item2, Direction.Right)] = priority + 1001;
                             }
@@ -125,10 +113,6 @@ namespace AdventOfCode.Days
                             {
                                 visited[(reindeer.Item1 + 1, reindeer.Item2, Direction.Down)] = priority + 1;
                             }
-                            else if (downValue == priority + 1)
-                            {
-                                visited[(reindeer.Item1 + 1, reindeer.Item2, Direction.Down)] = priority + 1;
-                            }
                         }
                         else
                         {
@@ -145,10 +129,6 @@ namespace AdventOfCode.Days
                             {
                                 visited[(reindeer.Item1 + 1, reindeer.Item2, Direction.Left)] = priority + 1001;
                             }
-                            else if (leftValue == priority + 1001)
-                            {
-                                visited[(reindeer.Item1 + 1, reindeer.Item2, Direction.Left)] = priority + 1001;
-                            }
                         }
                         else
                         {
@@ -162,10 +142,6 @@ namespace AdventOfCode.Days
                         if (visited.TryGetValue((reindeer.Item1 + 1, reindeer.Item2, Direction.Right), out var rightValue))
                         {
                             if (rightValue > priority + 1001)
-                            {
-                                visited[(reindeer.Item1 + 1, reindeer.Item2, Direction.Right)] = priority + 1001;
-                            }
-                            else if (rightValue == priority + 1001)
                             {
                                 visited[(reindeer.Item1 + 1, reindeer.Item2, Direction.Right)] = priority + 1001;
                             }
@@ -190,10 +166,6 @@ namespace AdventOfCode.Days
                             {
                                 visited[(reindeer.Item1, reindeer.Item2 - 1, Direction.Left)] = priority + 1;
                             }
-                            else if (leftValue == priority + 1)
-                            {
-                                visited[(reindeer.Item1, reindeer.Item2 - 1, Direction.Left)] = priority + 1;
-                            }
                         }
                         else
                         {
@@ -210,10 +182,6 @@ namespace AdventOfCode.Days
                             {
                                 visited[(reindeer.Item1, reindeer.Item2 - 1, Direction.Up)] = priority + 1001;
                             }
-                            else if (upValue == priority + 1001)
-                            {
-                                visited[(reindeer.Item1, reindeer.Item2 - 1, Direction.Up)] = priority + 1001;
-                            }
                         }
                         else
                         {
@@ -227,10 +195,6 @@ namespace AdventOfCode.Days
                         if (visited.TryGetValue((reindeer.Item1, reindeer.Item2 - 1, Direction.Down), out var downValue))
                         {
                             if (downValue > priority + 1001)
-                            {
-                                visited[(reindeer.Item1, reindeer.Item2 - 1, Direction.Down)] = priority + 1001;
-                            }
-                            else if (downValue == priority + 1001)
                             {
                                 visited[(reindeer.Item1, reindeer.Item2 - 1, Direction.Down)] = priority + 1001;
                             }
@@ -255,10 +219,6 @@ namespace AdventOfCode.Days
                             {
                                 visited[(reindeer.Item1, reindeer.Item2 + 1, Direction.Right)] = priority + 1;
                             }
-                            else if (rightValue == priority + 1)
-                            {
-                                visited[(reindeer.Item1, reindeer.Item2 + 1, Direction.Right)] = priority + 1;
-                            }
                         }
                         else
                         {
@@ -275,10 +235,6 @@ namespace AdventOfCode.Days
                             {
                                 visited[(reindeer.Item1, reindeer.Item2 + 1, Direction.Up)] = priority + 1001;
                             }
-                            else if (upValue == priority + 1001)
-                            {
-                                visited[(reindeer.Item1, reindeer.Item2 + 1, Direction.Up)] = priority + 1001;
-                            }
                         }
                         else
                         {
@@ -292,10 +248,6 @@ namespace AdventOfCode.Days
                         if (visited.TryGetValue((reindeer.Item1, reindeer.Item2 + 1, Direction.Down), out var downValue))
                         {
                             if (downValue > priority + 1001)
-                            {
-                                visited[(reindeer.Item1, reindeer.Item2 + 1, Direction.Down)] = reindeer.Item1 + 1001;
-                            }
-                            else if (downValue == priority + 1001)
                             {
                                 visited[(reindeer.Item1, reindeer.Item2 + 1, Direction.Down)] = reindeer.Item1 + 1001;
                             }
@@ -350,13 +302,13 @@ namespace AdventOfCode.Days
                     else if (inputs[i][j] == 'S')
                     {
                         queue.Enqueue((i, j, Direction.Right), 0);
-                        visited.Add(((i, j, Direction.Right)), (0, []));
+                        visited.Add((i, j, Direction.Right), (0, []));
                         queue.Enqueue((i, j, Direction.Up), 1000);
-                        visited.Add(((i, j, Direction.Up)), (1000, []));
+                        visited.Add((i, j, Direction.Up), (1000, []));
                         queue.Enqueue((i, j, Direction.Down), 1000);
-                        visited.Add(((i, j, Direction.Down)), (1000, []));
+                        visited.Add((i, j, Direction.Down), (1000, []));
                         queue.Enqueue((i, j, Direction.Left), 2000);
-                        visited.Add(((i, j, Direction.Left)), (2000, []));
+                        visited.Add((i, j, Direction.Left), (2000, []));
                     }
                     else if (inputs[i][j] == 'E')
                     {

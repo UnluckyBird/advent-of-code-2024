@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AdventOfCode.Days
@@ -32,8 +33,8 @@ namespace AdventOfCode.Days
         {
             long result = 0;
             string[] inputs = File.ReadAllLines(AppContext.BaseDirectory + "\\Data\\Day22.1.txt");
-
             ConcurrentDictionary<int, long> sequences = [];
+
             Parallel.ForEach(inputs, input =>
             {
                 HashSet<int> seenSequences = [];
@@ -56,18 +57,16 @@ namespace AdventOfCode.Days
                     {
                         if (seenSequences.Add(numSeq))
                         {
-                            sequences.AddOrUpdate(numSeq, res % 10, (key, oldValue) => oldValue + (res % 10));
-
-                            if (sequences.TryGetValue(numSeq, out long value) && result < value)
+                            long value = sequences.AddOrUpdate(numSeq, res % 10, (key, oldValue) => oldValue + (res % 10));
+                            if (value > result)
                             {
-                                result = value;
+                                Interlocked.Exchange(ref result, value);
                             }
                         }
                     }
                     numSeq = (numSeq << 5) & 0b11111111111111111111;
                 }
-            });  
-
+            });
             return result;
         }
     }

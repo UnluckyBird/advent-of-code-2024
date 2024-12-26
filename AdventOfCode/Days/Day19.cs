@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace AdventOfCode.Days
 {
@@ -11,14 +13,15 @@ namespace AdventOfCode.Days
             int result = 0;
             string[] inputs = File.ReadAllLines(AppContext.BaseDirectory + "\\Data\\Day19.1.txt");
             string[] towels = [.. inputs[0].Split(',', StringSplitOptions.TrimEntries)];
+
             for (int i = 2; i < inputs.Length; i++)
             {
-                if (CheckIfPossible(inputs[i].AsSpan(), towels))
+                if (CheckIfPossible(inputs[i], towels))
                 {
                     result++;
                 }
             }
-                       
+
             return result;
         }
 
@@ -27,10 +30,11 @@ namespace AdventOfCode.Days
             long result = 0;
             string[] inputs = File.ReadAllLines(AppContext.BaseDirectory + "\\Data\\Day19.1.txt");
             string[] towels = [.. inputs[0].Split(',', StringSplitOptions.TrimEntries)];
-            for (int i = 2; i < inputs.Length; i++)
+
+            Parallel.For(2, inputs.Length, (i) =>
             {
-                result += CheckIfPossibleAmount(inputs[i].AsSpan(), towels, []);
-            }
+                Interlocked.Add(ref result, CheckIfPossibleAmount(inputs[i], towels, []));
+            });
 
             return result;
         }
@@ -39,7 +43,7 @@ namespace AdventOfCode.Days
         {
             foreach (var towel in towels)
             {
-                if (design.StartsWith(towel.AsSpan(), StringComparison.Ordinal))
+                if (design.StartsWith(towel, StringComparison.Ordinal))
                 {
                     if (towel.Length == design.Length)
                     {
@@ -65,7 +69,7 @@ namespace AdventOfCode.Days
             {
                 foreach (var towel in towels)
                 {
-                    if (design.StartsWith(towel.AsSpan(), StringComparison.Ordinal))
+                    if (design.StartsWith(towel, StringComparison.Ordinal))
                     {
                         if (towel.Length == design.Length)
                         {
